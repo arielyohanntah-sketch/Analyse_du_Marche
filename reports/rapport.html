@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Analyse comparative de marché</title>
+<style>
+:root {
+  --bg: #f5f7f8;
+  --card: #ffffff;
+  --ink: #17202a;
+  --muted: #5b6770;
+  --accent: #0f766e;
+  --accent-dark: #115e59;
+  --amber: #b45309;
+  --danger: #b91c1c;
+  --line: #e3e8eb;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+}
+header {
+  background: linear-gradient(135deg, #0f766e 0%, #115e59 60%, #134e4a 100%);
+  color: #fff;
+  padding: 46px 24px 40px;
+}
+.wrap { max-width: 1180px; margin: 0 auto; }
+header h1 { margin: 0 0 8px; font-size: clamp(1.7rem, 3vw, 2.6rem); letter-spacing: -0.02em; }
+header p { margin: 0; color: #d1fae5; max-width: 780px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-top: 26px; }
+.card { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22); border-radius: 14px; padding: 16px; }
+.card .big { display: block; font-size: 1.9rem; font-weight: 700; letter-spacing: -0.03em; }
+.card .label { color: #ccfbf1; font-size: .86rem; }
+nav { background: #fff; border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5; }
+nav .wrap { display: flex; gap: 18px; overflow-x: auto; padding: 12px 24px; }
+nav a { color: var(--muted); text-decoration: none; font-size: .9rem; white-space: nowrap; }
+nav a:hover { color: var(--accent); }
+main { padding: 30px 24px 50px; }
+section { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 24px; margin: 0 0 22px; box-shadow: 0 1px 2px rgba(16,24,40,.03); }
+h2 { margin: 0 0 6px; font-size: 1.3rem; letter-spacing: -0.01em; }
+.lead { color: var(--muted); margin: 0 0 18px; }
+h3 { margin: 22px 0 10px; font-size: 1rem; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { background: #eef4f4; color: #234; font-weight: 600; white-space: nowrap; }
+tbody tr:last-child td { border-bottom: 0; }
+tbody tr:nth-child(even) { background: #fbfcfc; }
+tbody tr:hover { background: #f0fdfa; }
+tr.alert td { background: #fff7ed; }
+tr.alert:hover td { background: #ffedd5; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: .72rem; font-weight: 700; letter-spacing: .02em; }
+.badge.info { background: #e0f2fe; color: #075985; }
+.badge.warn { background: #fef3c7; color: #92400e; }
+.badge.error { background: #fee2e2; color: #991b1b; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+.panel { background: #f8fafb; border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+.panel h3 { margin-top: 0; }
+.bar-row { display: grid; grid-template-columns: 130px 1fr 48px; gap: 10px; align-items: center; margin: 8px 0; font-size: .9rem; }
+.bar-track { background: #e5e7eb; border-radius: 999px; height: 12px; overflow: hidden; }
+.bar-fill { background: linear-gradient(90deg, #0f766e, #14b8a6); height: 100%; border-radius: 999px; }
+.bar-fill.alt { background: linear-gradient(90deg, #b45309, #f59e0b); }
+.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.money { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.note { color: var(--muted); font-size: .86rem; margin-top: 10px; }
+.callout { border-left: 4px solid var(--accent); background: #f0fdfa; padding: 12px 14px; border-radius: 0 10px 10px 0; margin: 14px 0; }
+.callout.warn { border-left-color: var(--amber); background: #fffbeb; }
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.step { background: #f8fafb; border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+.step .n { display: inline-flex; width: 26px; height: 26px; align-items: center; justify-content: center; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 700; font-size: .8rem; margin-bottom: 8px; }
+.step strong { display: block; margin-bottom: 4px; }
+.step span { color: var(--muted); font-size: .85rem; }
+ul.clean { margin: 8px 0; padding-left: 20px; }
+ul.clean li { margin: 4px 0; }
+footer { color: var(--muted); text-align: center; padding: 0 24px 40px; font-size: .82rem; }
+details summary { cursor: pointer; color: var(--accent); font-weight: 600; margin: 10px 0; }
+@media (max-width: 700px) {
+  section { padding: 18px; }
+  .bar-row { grid-template-columns: 100px 1fr 40px; }
+}
+@media print {
+  nav { display: none; }
+  body { background: #fff; }
+  section { box-shadow: none; break-inside: avoid; }
+  header { background: #115e59 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Analyse comparative de marché</h1>
+    <p>Trois boutiques en ligne, un même catalogue, des prix différents.
+    Le programme collecte, normalise, rapproche, compare et décide où acheter.</p>
+    
+    <div class="cards">
+      <div class="card"><span class="big">23</span><span class="label">produits comparés</span></div>
+      <div class="card"><span class="big">76</span><span class="label">offres collectées</span></div>
+      <div class="card"><span class="big">7</span><span class="label">produits non comparables</span></div>
+      <div class="card"><span class="big">Comptoir</span><span class="label">plus souvent la moins chère</span></div>
+      <div class="card"><span class="big">6 500 FCFA</span><span class="label">économie sur le panier</span></div>
+    </div>
+    
+  </div>
+</header>
+<nav><div class="wrap">
+  <a href="#demarche">Démarche</a>
+  <a href="#collecte">Collecte</a>
+  <a href="#journal">Journal</a>
+  <a href="#comparatif">Comparatif</a>
+  <a href="#synthese">Synthèse</a>
+  <a href="#panier">Panier</a>
+  <a href="#historique">Historique</a>
+  <a href="#complexite">Complexité</a>
+  <a href="#choix">Choix techniques</a>
+</div></nav>
+<main class="wrap">
+  
+    <section id="demarche">
+      <h2>La démarche</h2>
+      <p class="lead">Cinq étapes, de la donnée brute à la décision d'achat.</p>
+      <div class="steps">
+        <div class="step"><span class="n">1</span><strong>Collecter</strong><span>CSV, JSON et Excel : trois formats, trois façons d'écrire.</span></div>
+        <div class="step"><span class="n">2</span><strong>Normaliser</strong><span>Accents, casse, espaces, unités et synonymes.</span></div>
+        <div class="step"><span class="n">3</span><strong>Indexer</strong><span>Un dictionnaire produit → prix par boutique.</span></div>
+        <div class="step"><span class="n">4</span><strong>Comparer</strong><span>Minimum, maximum, écart en FCFA et en %.</span></div>
+        <div class="step"><span class="n">5</span><strong>Décider</strong><span>Meilleure boutique, alertes, panier optimal.</span></div>
+      </div>
+    </section>
+    
+  
+    <section id="collecte">
+      <h2>1. Collecte et rapprochement</h2>
+      <p class="lead">Chaque offre est rattachée à un produit_id du catalogue commun.</p>
+      <div class="table-wrap"><table class=""><thead><tr><th>Boutique</th><th>Offres lues</th><th>Disponibles</th><th>Rapprochées</th></tr></thead><tbody><tr><td>Marché Lagune</td><td>28</td><td>20</td><td>28</td></tr><tr><td>Baobab Shop</td><td>26</td><td>22</td><td>26</td></tr><tr><td>Comptoir Ivoire</td><td>22</td><td>20</td><td>22</td></tr></tbody></table></div>
+      <p class="note">Une offre est disponible si elle a un prix exploitable et n'est pas en rupture de stock.</p>
+    </section>
+    
+  
+    <section id="journal">
+      <h2>2. Journal de nettoyage</h2>
+      <p class="lead">19 informations, 17 avertissements, 0 erreurs.</p>
+      <div class="callout">
+        Les problèmes sont traités et conservés : rien n'est corrigé en silence.
+      </div>
+      <details>
+        <summary>Voir les 36 lignes du journal</summary>
+        <div class="table-wrap"><table class=""><thead><tr><th>Niveau</th><th>Étape</th><th>Source</th><th>Référence</th><th>Problème</th><th>Action</th></tr></thead><tbody><tr><td><span class="badge info">INFO</span></td><td>COLLECTE</td><td>Catalogue</td><td>-</td><td>30 produits de référence lus</td><td>catalogue chargé</td></tr><tr><td><span class="badge info">INFO</span></td><td>COLLECTE</td><td>Marché Lagune</td><td>-</td><td>30 lignes lues</td><td>fichier CSV chargé</td></tr><tr><td><span class="badge info">INFO</span></td><td>COLLECTE</td><td>Baobab Shop</td><td>-</td><td>26 articles lus</td><td>fichier JSON chargé</td></tr><tr><td><span class="badge info">INFO</span></td><td>COLLECTE</td><td>Comptoir Ivoire</td><td>-</td><td>en-tête détecté à la ligne 3</td><td>lecture à partir de la ligne suivante</td></tr><tr><td><span class="badge info">INFO</span></td><td>COLLECTE</td><td>Comptoir Ivoire</td><td>-</td><td>22 articles lus dans la feuille &#x27;Tarifs octobre 2026&#x27;</td><td>fichier Excel chargé</td></tr><tr><td><span class="badge warn">AVERTISSEMENT</span></td><td>NETTOYAGE</td><td>Marché Lagune</td><td>ML-1000</td><td>ligne en double</td><td>doublon ignoré</td></tr><tr><td><span class="badge warn">AVERTISSEMENT</span></td><td>NETTOYAGE</td><td>Marché Lagune</td><td>ML-1147</td><td>ligne en double</td><td>doublon ignoré</td></tr><tr><td><span class="badge info">INFO</span></td><td>NETTOYAGE</td><td>Marché Lagune</td><td>ML-1000</td><td>article en rupture de stock</td><td>offre exclue de la comparaison</td></tr><tr><td><span class="badge info">INFO</span></td><td>NETTOYAGE</td><td>Marché Lagune</td><td>ML-1014</td><td>article en rupture de stock</td><td>offre exclue de la comparaison</td></tr><tr><td><span class="badge warn">AVERTISSEMENT</span></td><td>NETTOYAGE</td><td>Marché Lagune</td><td>ML-1021</td><td>prix 779000 FCFA incohérent avec l&#x27;ancien prix 88700 FCFA (ratio 8.78)</td><td>offre écartée de la comparaison</td></tr><tr><td><span class="badge info">INFO</span></td><td>NETTOYAGE</td><td>Marché Lagune</td><td>ML-1049</td><td>article en rupture de stock</td><td>offre exclue de la comparaison</td></tr><tr><td><span class="badge info">INFO</span></td><td>NETTOYAGE</td><td>Marché Lagune</td><td>ML-1084</td><td>article en rupture de stock</td><td>offre exclue de la comparaison</td></tr><tr><td><span class="badge info">INFO</span></td><td>NORMALISATION</td><td>Marché Lagune</td><td>ML-1105</td><td>espaces superflus dans le nom</td><td>nom nettoyé pour l&#x27;affichage</td></tr><tr><td><span class="badge warn">AVERTISSEMENT</span></td><td>NETTOYAGE</td><td>Marché Lagune</td><td>ML-1119</td><td>prix absent ou illisible</td><td>offre non comparable</td></tr><tr><td><span class="badge info">INFO</span></td><td>NETTOYAGE</td><td>Marché Lagune</td><td>ML-1147</td><td>article en rupture de stock</td><td>offre exclue de la comparaison</td></tr><tr><td><span class="badge warn">AVERTISSEMENT</span></td><td>NETTOYAGE</td><td>Marché Lagune</td><td>ML-1168</td><td>prix absent ou illisible</td><td>offre non comparable</td></tr><tr><td><span class="badge info">INFO</span></td><td>NETTOYAGE</td><td>Baobab Shop</td><td>BB03433</td><td>article en rupture de stock</td><td>offre exclue de la comparaison</td></tr><tr><td><span class="badge info">INFO</span></td><td>NETTOYAGE</td><td>Baobab Shop</td><td>BB16464</td><td>article en rupture de stock</td><td>offre exclue de la comparaison</td></tr><tr><td><span class="badge warn">AVERTISSEMENT</span></td><td>NETTOYAGE</td><td>Baobab Shop</td><td>BB27999</td><td>prix absent ou illisible</td><td>offre non comparable</td></tr><tr><td><span class="badge info">INFO</span></td><td>NETTOYAGE</td><td>Baobab Shop</td><td>BB30124</td><td>article en rupture de stock</td><td>offre exclue de la comparaison</td></tr><tr><td><span class="badge warn">AVERTISSEMENT</span></td><td>NORMALISATION</td><td>Comptoir Ivoire</td><td>CI200</td><td>marque probablement mal orthographiée</td><td>interprétée comme Samsung</td></tr><tr><td><span class="badge info">INFO</span></td><td>NETTOYAGE</td><td>Comptoir Ivoire</td><td>CI214</td><td>article en rupture de stock</td><td>offre exclue de la comparaison</td></tr><tr><td><span class="badge info">INFO</span></td><td>NORMALISATION</td><td>Comptoir Ivoire</td><td>CI216</td><td>prix écrit sous forme de texte</td><td>converti en 279300 FCFA</td></tr><tr><td><span class="badge info">INFO</span></td><td>NETTOYAGE</td><td>Comptoir Ivoire</td><td>CI217</td><td>article en rupture de stock</td><td>offre exclue de la comparaison</td></tr><tr><td><span class="badge warn">AVERTISSEMENT</span></td><td>RAPPROCHEMENT</td><td>Marché Lagune</td><td>ML-1056</td><td>nom éloigné du catalogue (score 0.75)</td><td>associé à P09 — Apple iPhone 13 128 Go</td></tr><tr><td><span class="badge warn">AVERTISSEMENT</span></td><td>RAPPROCHEMENT</td><td>Baobab Shop</td><td>BB15546</td><td>nom éloigné du catalogue (score 0.67)</td><td>associé à P15 — Disque dur externe Seagate 1 To</td></tr><tr><td><span class="badge warn">AVERTISSEMENT</span></td><td>RAPPROCHEMENT</td><td>Baobab Shop</td><td>BB29464</td><td>nom éloigné du catalogue (score 0.69)</td><td>associé à P29 — Bouilloire électrique 1,7 L</td></tr><tr><td><span class="badge warn">AVERTISSEMENT</span></td><td>RAPPROCHEMENT</td><td>Comptoir Ivoire</td><td>CI204</td><td>nom éloigné du catalogue (score 0.79)</td><td>associé à P08 — Itel A70 64 Go</td></tr><tr><td><span class="badge warn">AVERTISSEMENT</span></td><td>RAPPROCHEMENT</td><td>Comptoir Ivoire</td><td>CI205</td><td>nom éloigné du catalogue (score 0.75)</td><td>associé à P09 — Apple iPhone 13 128 Go</td></tr><tr><td><span class="badge warn">AVERTISSEMENT</span></td><td>RAPPROCHEMENT</td><td>Comptoir Ivoire</td><td>CI206</td><td>nom éloigné du catalogue (score 0.79)</td><td>associé à P11 — HP 250 G9 Core i5 8 Go 512 Go</td></tr><tr><td><span class="badge warn">AVERTISSEMENT</span></td><td>RAPPROCHEMENT</td><td>Comptoir Ivoire</td><td>CI207</td><td>nom éloigné du catalogue (score 0.79)</td><td>associé à P12 — Lenovo IdeaPad 3 Core i3 8 Go 256 Go</td></tr><tr><td><span class="badge warn">AVERTISSEMENT</span></td><td>RAPPROCHEMENT</td><td>Comptoir Ivoire</td><td>CI208</td><td>nom éloigné du catalogue (score 0.79)</td><td>associé à P13 — Dell Inspiron 15 Core i5 16 Go 512 Go</td></tr><tr><td><span class="badge warn">AVERTISSEMENT</span></td><td>RAPPROCHEMENT</td><td>Comptoir Ivoire</td><td>CI218</td><td>nom éloigné du catalogue (score 0.79)</td><td>associé à P26 — Mixeur Moulinex 1,5 L</td></tr><tr><td><span class="badge warn">AVERTISSEMENT</span></td><td>RAPPROCHEMENT</td><td>Comptoir Ivoire</td><td>CI221</td><td>nom éloigné du catalogue (score 0.69)</td><td>associé à P29 — Bouilloire électrique 1,7 L</td></tr><tr><td><span class="badge info">INFO</span></td><td>RAPPROCHEMENT</td><td>-</td><td>-</td><td>76/76 offres associées à un produit</td><td>index inversé et score de similarité</td></tr><tr><td><span class="badge info">INFO</span></td><td>HISTORIQUE</td><td>-</td><td>-</td><td>20876 relevés lus, 0 ligne(s) ignorée(s)</td><td>index construit en 492.6 ms</td></tr></tbody></table></div>
+      </details>
+    </section>
+    
+  
+    <section id="comparatif">
+      <h2>3. Comparatif des prix</h2>
+      <p class="lead">Trié par écart décroissant : les décisions les plus intéressantes d'abord.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>ID</th><th>Produit</th><th>Meilleure</th><th>Prix min</th><th>Prix max</th><th>Écart FCFA</th><th>Écart %</th><th>Statut</th></tr></thead>
+        <tbody><tr class="alert"><td>P29</td><td>Bouilloire électrique 1,7 L</td><td>Comptoir</td><td><span class="money">9 200 FCFA</span></td><td><span class="money">11 600 FCFA</span></td><td><span class="money">2 400 FCFA</span></td><td><span class="num">26,1 %</span></td><td><span class="badge warn">à surveiller</span></td></tr><tr class="alert"><td>P14</td><td>Clé USB SanDisk 64 Go</td><td>Marché</td><td><span class="money">6 100 FCFA</span></td><td><span class="money">7 300 FCFA</span></td><td><span class="money">1 200 FCFA</span></td><td><span class="num">19,7 %</span></td><td><span class="badge warn">à surveiller</span></td></tr><tr class="alert"><td>P21</td><td>Congélateur Nasco 200 L</td><td>Comptoir</td><td><span class="money">151 725 FCFA</span></td><td><span class="money">176 000 FCFA</span></td><td><span class="money">24 275 FCFA</span></td><td><span class="num">16,0 %</span></td><td><span class="badge warn">à surveiller</span></td></tr><tr class="alert"><td>P11</td><td>HP 250 G9 Core i5 8 Go 512 Go</td><td>Baobab</td><td><span class="money">354 200 FCFA</span></td><td><span class="money">407 000 FCFA</span></td><td><span class="money">52 800 FCFA</span></td><td><span class="num">14,9 %</span></td><td><span class="badge warn">à surveiller</span></td></tr><tr class="alert"><td>P01</td><td>Samsung Galaxy A15 128 Go</td><td>Comptoir</td><td><span class="money">92 990 FCFA</span></td><td><span class="money">104 000 FCFA</span></td><td><span class="money">11 010 FCFA</span></td><td><span class="num">11,8 %</span></td><td><span class="badge warn">à surveiller</span></td></tr><tr class="alert"><td>P20</td><td>Réfrigérateur Hisense 205 L</td><td>Comptoir</td><td><span class="money">168 385 FCFA</span></td><td><span class="money">186 100 FCFA</span></td><td><span class="money">17 715 FCFA</span></td><td><span class="num">10,5 %</span></td><td><span class="badge warn">à surveiller</span></td></tr><tr class="alert"><td>P24</td><td>Climatiseur LG 1 CV</td><td>Baobab</td><td><span class="money">253 300 FCFA</span></td><td><span class="money">279 300 FCFA</span></td><td><span class="money">26 000 FCFA</span></td><td><span class="num">10,3 %</span></td><td><span class="badge warn">à surveiller</span></td></tr><tr><td>P23</td><td>TV Hisense 32 pouces</td><td>Comptoir</td><td><span class="money">88 740 FCFA</span></td><td><span class="money">96 000 FCFA</span></td><td><span class="money">7 260 FCFA</span></td><td><span class="num">8,2 %</span></td><td><span class="badge info">normal</span></td></tr><tr><td>P12</td><td>Lenovo IdeaPad 3 Core i3 8 Go 256 Go</td><td>Comptoir</td><td><span class="money">287 375 FCFA</span></td><td><span class="money">309 400 FCFA</span></td><td><span class="money">22 025 FCFA</span></td><td><span class="num">7,7 %</span></td><td><span class="badge info">normal</span></td></tr><tr><td>P02</td><td>Samsung Galaxy A25 128 Go</td><td>Baobab</td><td><span class="money">142 000 FCFA</span></td><td><span class="money">151 500 FCFA</span></td><td><span class="money">9 500 FCFA</span></td><td><span class="num">6,7 %</span></td><td><span class="badge info">normal</span></td></tr><tr><td>P09</td><td>Apple iPhone 13 128 Go</td><td>Baobab</td><td><span class="money">417 200 FCFA</span></td><td><span class="money">443 700 FCFA</span></td><td><span class="money">26 500 FCFA</span></td><td><span class="num">6,4 %</span></td><td><span class="badge info">normal</span></td></tr><tr><td>P26</td><td>Mixeur Moulinex 1,5 L</td><td>Comptoir</td><td><span class="money">29 200 FCFA</span></td><td><span class="money">30 900 FCFA</span></td><td><span class="money">1 700 FCFA</span></td><td><span class="num">5,8 %</span></td><td><span class="badge info">normal</span></td></tr><tr><td>P15</td><td>Disque dur externe Seagate 1 To</td><td>Marché</td><td><span class="money">37 600 FCFA</span></td><td><span class="money">39 500 FCFA</span></td><td><span class="money">1 900 FCFA</span></td><td><span class="num">5,1 %</span></td><td><span class="badge info">normal</span></td></tr><tr><td>P28</td><td>Micro-ondes Samsung 23 L</td><td>Baobab</td><td><span class="money">65 400 FCFA</span></td><td><span class="money">68 500 FCFA</span></td><td><span class="money">3 100 FCFA</span></td><td><span class="num">4,7 %</span></td><td><span class="badge info">normal</span></td></tr><tr><td>P17</td><td>Imprimante HP DeskJet 2720e</td><td>Marché</td><td><span class="money">44 000 FCFA</span></td><td><span class="money">45 700 FCFA</span></td><td><span class="money">1 700 FCFA</span></td><td><span class="num">3,9 %</span></td><td><span class="badge info">normal</span></td></tr><tr><td>P06</td><td>Infinix Hot 40i 128 Go</td><td>Comptoir</td><td><span class="money">67 165 FCFA</span></td><td><span class="money">69 500 FCFA</span></td><td><span class="money">2 335 FCFA</span></td><td><span class="num">3,5 %</span></td><td><span class="badge info">normal</span></td></tr><tr><td>P22</td><td>TV Samsung 43 pouces Crystal UHD</td><td>Baobab</td><td><span class="money">244 400 FCFA</span></td><td><span class="money">251 100 FCFA</span></td><td><span class="money">6 700 FCFA</span></td><td><span class="num">2,7 %</span></td><td><span class="badge info">normal</span></td></tr><tr><td>P10</td><td>Xiaomi Redmi Note 13 128 Go</td><td>Baobab</td><td><span class="money">134 100 FCFA</span></td><td><span class="money">136 900 FCFA</span></td><td><span class="money">2 800 FCFA</span></td><td><span class="num">2,1 %</span></td><td><span class="badge info">normal</span></td></tr><tr><td>P04</td><td>Tecno Spark 20 128 Go</td><td>Baobab</td><td><span class="money">75 000 FCFA</span></td><td><span class="money">76 300 FCFA</span></td><td><span class="money">1 300 FCFA</span></td><td><span class="num">1,7 %</span></td><td><span class="badge info">normal</span></td></tr><tr><td>P05</td><td>Tecno Camon 30 256 Go</td><td>Baobab</td><td><span class="money">135 400 FCFA</span></td><td><span class="money">136 900 FCFA</span></td><td><span class="money">1 500 FCFA</span></td><td><span class="num">1,1 %</span></td><td><span class="badge info">normal</span></td></tr><tr><td>P07</td><td>Infinix Note 40 256 Go</td><td>Marché</td><td><span class="money">132 400 FCFA</span></td><td><span class="money">132 700 FCFA</span></td><td><span class="money">300 FCFA</span></td><td><span class="num">0,2 %</span></td><td><span class="badge info">normal</span></td></tr><tr><td>P16</td><td>Souris sans fil Logitech M185</td><td>Marché + Comptoir</td><td><span class="money">9 200 FCFA</span></td><td><span class="money">9 200 FCFA</span></td><td><span class="money">0 FCFA</span></td><td><span class="num">0,0 %</span></td><td><span class="badge info">normal</span></td></tr><tr><td>P27</td><td>Fer à repasser Philips</td><td>Marché + Comptoir</td><td><span class="money">15 700 FCFA</span></td><td><span class="money">15 700 FCFA</span></td><td><span class="money">0 FCFA</span></td><td><span class="num">0,0 %</span></td><td><span class="badge info">normal</span></td></tr></tbody>
+      </table></div>
+      <p class="note">Écart = prix le plus élevé − prix le plus bas : c'est la marge réalisée en évitant la boutique la plus chère. Le pourcentage est calculé par rapport au prix le plus bas.</p>
+    </section>
+    
+  
+    <section id="synthese">
+      <h2>4. Synthèse et décision</h2>
+      <p class="lead">Qui gagne le plus souvent, et où se trouvent les plus gros écarts ?</p>
+      <div class="grid2">
+        <div class="panel">
+          <h3>Victoires (égalités comprises)</h3>
+          <div class="bar-row"><span>Comptoir Ivoire</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><span class="num">10</span></div><div class="bar-row"><span>Baobab Shop</span><div class="bar-track"><div class="bar-fill" style="width:90%"></div></div><span class="num">9</span></div><div class="bar-row"><span>Marché Lagune</span><div class="bar-track"><div class="bar-fill" style="width:60%"></div></div><span class="num">6</span></div>
+          <p class="note">2 égalité(s) entre boutiques.</p>
+        </div>
+        <div class="panel">
+          <h3>Écart moyen vs prix le plus bas</h3>
+          <div class="table-wrap"><table class=""><thead><tr><th>Boutique</th><th>Surcoût moyen</th></tr></thead><tbody><tr><td>Comptoir Ivoire</td><td><span class="num">2,8 %</span></td></tr><tr><td>Marché Lagune</td><td><span class="num">3,8 %</span></td></tr><tr><td>Baobab Shop</td><td><span class="num">4,7 %</span></td></tr></tbody></table></div>
+          <p class="note">Plus le pourcentage est bas, plus la boutique est compétitive en moyenne.</p>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="panel">
+          <h3>Top 3 des économies absolues</h3>
+          <ul class="clean"><li><strong>P11 — HP 250 G9 Core i5 8 Go 512 Go</strong> : 52 800 FCFA d'écart (14,9 %)</li><li><strong>P09 — Apple iPhone 13 128 Go</strong> : 26 500 FCFA d'écart (6,4 %)</li><li><strong>P24 — Climatiseur LG 1 CV</strong> : 26 000 FCFA d'écart (10,3 %)</li></ul>
+        </div>
+        <div class="panel">
+          <h3>Top 3 des écarts relatifs</h3>
+          <ul class="clean"><li><strong>P29 — Bouilloire électrique 1,7 L</strong> : 26,1 % (2 400 FCFA)</li><li><strong>P14 — Clé USB SanDisk 64 Go</strong> : 19,7 % (1 200 FCFA)</li><li><strong>P21 — Congélateur Nasco 200 L</strong> : 16,0 % (24 275 FCFA)</li></ul>
+        </div>
+      </div>
+      <h3>Produits non comparés</h3>
+      <div class="table-wrap"><table class=""><thead><tr><th>ID</th><th>Produit</th><th>Raison</th><th>Boutiques disponibles</th></tr></thead><tbody><tr><td>P03</td><td>Samsung Galaxy A55 256 Go</td><td>aucune offre disponible : rupture, prix absent ou produit non vendu</td><td>-</td></tr><tr><td>P08</td><td>Itel A70 64 Go</td><td>une seule boutique disponible : rien à comparer</td><td>Comptoir</td></tr><tr><td>P13</td><td>Dell Inspiron 15 Core i5 16 Go 512 Go</td><td>une seule boutique disponible : rien à comparer</td><td>Comptoir</td></tr><tr><td>P18</td><td>Routeur TP-Link Archer C6</td><td>une seule boutique disponible : rien à comparer</td><td>Baobab</td></tr><tr><td>P19</td><td>Écran Samsung 24 pouces</td><td>une seule boutique disponible : rien à comparer</td><td>Baobab</td></tr><tr><td>P25</td><td>Ventilateur sur pied Binatone 16 pouces</td><td>une seule boutique disponible : rien à comparer</td><td>Marché</td></tr><tr><td>P30</td><td>Climatiseur Hisense 1,5 CV</td><td>une seule boutique disponible : rien à comparer</td><td>Marché</td></tr></tbody></table></div>
+    </section>
+    
+  
+    <section id="panier">
+      <h2>5. Panier de rentrée</h2>
+      <p class="lead">1 Tecno Spark 20, 1 Lenovo IdeaPad 3, 2 clés USB, 1 disque dur, 1 micro-ondes.</p>
+      <div class="grid2">
+        <div class="panel">
+          <h3>Coût si tout est acheté dans une seule boutique</h3>
+          <div class="table-wrap"><table class=""><thead><tr><th>Boutique</th><th>Total</th><th>Statut</th></tr></thead><tbody><tr><td>Marché Lagune</td><td><span class="badge warn">incomplet</span></td><td>Tecno Spark 20 128 Go</td></tr><tr><td>Baobab Shop</td><td><span class="money">491 500 FCFA</span></td><td><span class="badge info">complet</span></td></tr><tr><td>Comptoir Ivoire</td><td><span class="money">484 075 FCFA</span></td><td><span class="badge info">complet</span></td></tr></tbody></table></div>
+        </div>
+        <div class="panel">
+          <h3>Décision</h3>
+          <p><strong>Meilleure combinaison :</strong> 477 575 FCFA</p>
+          <p><strong>Meilleure boutique unique :</strong> Comptoir Ivoire (484 075 FCFA)</p>
+          <p><strong>Économie :</strong> 6 500 FCFA</p>
+          <div class="callout">Acheter chaque article là où il est le moins cher est optimal ici, car les articles sont indépendants.</div>
+        </div>
+      </div>
+      <h3>Détail de la combinaison optimale</h3>
+      <div class="table-wrap"><table class=""><thead><tr><th>ID</th><th>Produit</th><th>Qté</th><th>Boutique</th><th>Prix unitaire</th><th>Total</th></tr></thead><tbody><tr><td>P04</td><td>Tecno Spark 20 128 Go</td><td>1</td><td>Baobab</td><td><span class="money">75 000 FCFA</span></td><td><span class="money">75 000 FCFA</span></td></tr><tr><td>P12</td><td>Lenovo IdeaPad 3 Core i3 8 Go 256 Go</td><td>1</td><td>Comptoir</td><td><span class="money">287 375 FCFA</span></td><td><span class="money">287 375 FCFA</span></td></tr><tr><td>P14</td><td>Clé USB SanDisk 64 Go</td><td>2</td><td>Marché</td><td><span class="money">6 100 FCFA</span></td><td><span class="money">12 200 FCFA</span></td></tr><tr><td>P15</td><td>Disque dur externe Seagate 1 To</td><td>1</td><td>Marché</td><td><span class="money">37 600 FCFA</span></td><td><span class="money">37 600 FCFA</span></td></tr><tr><td>P28</td><td>Micro-ondes Samsung 23 L</td><td>1</td><td>Baobab</td><td><span class="money">65 400 FCFA</span></td><td><span class="money">65 400 FCFA</span></td></tr></tbody></table></div>
+    </section>
+    
+  
+    <section id="historique">
+      <h2>6. Historique : quand fallait-il acheter ?</h2>
+      <p class="lead">Période 2025-11-01 → 2026-10-31 · 20876 relevés.</p>
+      <div class="table-wrap"><table class=""><thead><tr><th>Boutique</th><th>Moyenne annuelle</th><th>Black Friday</th><th>Variation</th><th>Meilleur mois</th><th>Prix moyen</th></tr></thead><tbody><tr><td>Marché Lagune</td><td><span class="money">161 978 FCFA</span></td><td><span class="money">143 894 FCFA</span></td><td><span class="badge info">-11,2 %</span></td><td>2026-09</td><td><span class="money">153 835 FCFA</span></td></tr><tr><td>Baobab Shop</td><td><span class="money">140 913 FCFA</span></td><td><span class="money">124 579 FCFA</span></td><td><span class="badge info">-11,6 %</span></td><td>2026-09</td><td><span class="money">134 748 FCFA</span></td></tr><tr><td>Comptoir Ivoire</td><td><span class="money">154 843 FCFA</span></td><td><span class="money">160 604 FCFA</span></td><td><span class="badge warn">3,7 %</span></td><td>2026-09</td><td><span class="money">147 781 FCFA</span></td></tr></tbody></table></div>
+      <div class="callout"><ul class="clean"><li><strong>Marché Lagune</strong> : le Black Friday était moins cher de 11,2 %.</li><li><strong>Baobab Shop</strong> : le Black Friday était moins cher de 11,6 %.</li><li><strong>Comptoir Ivoire</strong> : le Black Friday était plus cher de 3,7 % ; le meilleur mois était 2026-09.</li></ul></div>
+      <p class="note">Pour Comptoir Ivoire, l'historique contient le prix catalogue, sans la remise.</p>
+    </section>
+    
+  
+        <section id="complexite">
+          <h2>7. Complexité : le temps mesuré</h2>
+          <p class="lead">Même opération, deux structures de données.</p>
+          <h3>Recherche dans l&#x27;historique</h3><div class="table-wrap"><table class=""><thead><tr><th>Opération</th><th>Version naïve</th><th>Version indexée</th><th>Gain</th></tr></thead><tbody><tr><td>Recherche dans l&#x27;historique</td><td>O(q × n)<br><span class='money'>227.69 ms</span></td><td>O(q)<br><span class='money'>89 µs</span></td><td><span class="badge info">×2567</span></td></tr></tbody></table></div><h3>Recherche dans un catalogue</h3><div class="table-wrap"><table class=""><thead><tr><th>Opération</th><th>Version naïve</th><th>Version indexée</th><th>Gain</th></tr></thead><tbody><tr><td>Recherche par nom (1000 produits)</td><td>O(q × n)<br><span class='money'>1.01 ms</span></td><td>O(q) après O(n)<br><span class='money'>95 µs</span></td><td><span class="badge info">×11</span></td></tr><tr><td>Recherche par nom (5000 produits)</td><td>O(q × n)<br><span class='money'>5.15 ms</span></td><td>O(q) après O(n)<br><span class='money'>454 µs</span></td><td><span class="badge info">×11</span></td></tr><tr><td>Recherche par nom (20000 produits)</td><td>O(q × n)<br><span class='money'>20.12 ms</span></td><td>O(q) après O(n)<br><span class='money'>1.79 ms</span></td><td><span class="badge info">×11</span></td></tr></tbody></table></div>
+          <p class="note">Mesures refaites à chaque exécution sur la machine qui produit le rapport.</p>
+        </section>
+        
+  
+    <section id="temps">
+      <h2>8. Temps d'exécution par étape</h2>
+      <div class="table-wrap"><table class=""><thead><tr><th>Étape</th><th>Temps</th></tr></thead><tbody><tr><td>collecte</td><td><span class="money">7.42 ms</span></td></tr><tr><td>normalisation</td><td><span class="money">4.71 ms</span></td></tr><tr><td>rapprochement</td><td><span class="money">3.10 ms</span></td></tr><tr><td>comparaison</td><td><span class="money">159 µs</span></td></tr><tr><td>panier</td><td><span class="money">59 µs</span></td></tr><tr><td>historique</td><td><span class="money">507.67 ms</span></td></tr><tr><td>benchmark</td><td><span class="money">1.19 s</span></td></tr><tr><td>export</td><td><span class="money">1.91 ms</span></td></tr><tr><td>total</td><td><span class="money">1.71 s</span></td></tr></tbody></table></div>
+    </section>
+    
+  
+    <section id="choix">
+      <h2>Choix techniques</h2>
+      <div class="grid2">
+        <div class="panel">
+          <h3>Nettoyage</h3>
+          <ul class="clean">
+            <li>Accents, casse, espaces multiples et guillemets normalisés.</li>
+            <li>Unités unifiées : Go → GB, To → TB, CV → HP, 1,5 L → 1.5L.</li>
+            <li>Synonymes : frigo/fridge/réfrigérateur, clim/air conditioner, blender/mixeur.</li>
+            <li>Prix texte converti en entier FCFA.</li>
+            <li>Doublons supprimés, ruptures et prix absents écartés.</li>
+            <li>Prix incohérent avec l'ancien prix signalé et écarté.</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Rapprochement</h3>
+          <ul class="clean">
+            <li>Signature : mots, marque, capacité et modèle.</li>
+            <li>Index inversé mot → produits candidats.</li>
+            <li>Règles : marque, capacité et modèle incompatibles = rejet.</li>
+            <li>Score de recouvrement des mots, avec bonus de marque.</li>
+            <li>Les correspondances faibles sont signalées dans le journal.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    
+</main>
+<footer>
+  Rapport généré automatiquement par le projet Analyse comparative de marché.
+  Données fictives de l'exercice — DA Python, L2 Computer Science.
+</footer>
+</body>
+</html>

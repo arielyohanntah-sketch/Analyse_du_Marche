@@ -1,0 +1,24 @@
+﻿produit_id;produit;categorie;marque;meilleure_boutique;prix_min;prix_max;ecart_fcfa;ecart_pct;alerte;nb_boutiques;prix_Marché Lagune;prix_Baobab Shop;prix_Comptoir Ivoire
+P29;Bouilloire électrique 1,7 L;Électroménager;Binatone;Comptoir Ivoire;9200;11600;2400;26.1;OUI;2;;11600;9200
+P14;Clé USB SanDisk 64 Go;Informatique;SanDisk;Marché Lagune;6100;7300;1200;19.7;OUI;3;6100;7300;6200
+P21;Congélateur Nasco 200 L;Électroménager;Nasco;Comptoir Ivoire;151725;176000;24275;16.0;OUI;2;176000;;151725
+P11;HP 250 G9 Core i5 8 Go 512 Go;Informatique;HP;Baobab Shop;354200;407000;52800;14.9;OUI;3;390800;354200;407000
+P01;Samsung Galaxy A15 128 Go;Smartphone;Samsung;Comptoir Ivoire;92990;104000;11010;11.8;OUI;2;;104000;92990
+P20;Réfrigérateur Hisense 205 L;Électroménager;Hisense;Comptoir Ivoire;168385;186100;17715;10.5;OUI;3;186100;183000;168385
+P24;Climatiseur LG 1 CV;Électroménager;LG;Baobab Shop;253300;279300;26000;10.3;OUI;3;256600;253300;279300
+P23;TV Hisense 32 pouces;Électroménager;Hisense;Comptoir Ivoire;88740;96000;7260;8.2;NON;2;;96000;88740
+P12;Lenovo IdeaPad 3 Core i3 8 Go 256 Go;Informatique;Lenovo;Comptoir Ivoire;287375;309400;22025;7.7;NON;3;309400;298200;287375
+P02;Samsung Galaxy A25 128 Go;Smartphone;Samsung;Baobab Shop;142000;151500;9500;6.7;NON;3;151500;142000;150300
+P09;Apple iPhone 13 128 Go;Smartphone;Apple;Baobab Shop;417200;443700;26500;6.4;NON;3;433700;417200;443700
+P26;Mixeur Moulinex 1,5 L;Électroménager;Moulinex;Comptoir Ivoire;29200;30900;1700;5.8;NON;2;;30900;29200
+P15;Disque dur externe Seagate 1 To;Informatique;Seagate;Marché Lagune;37600;39500;1900;5.1;NON;3;37600;38300;39500
+P28;Micro-ondes Samsung 23 L;Électroménager;Samsung;Baobab Shop;65400;68500;3100;4.7;NON;3;67200;65400;68500
+P17;Imprimante HP DeskJet 2720e;Informatique;HP;Marché Lagune;44000;45700;1700;3.9;NON;2;44000;45700;
+P06;Infinix Hot 40i 128 Go;Smartphone;Infinix;Comptoir Ivoire;67165;69500;2335;3.5;NON;3;69200;69500;67165
+P22;TV Samsung 43 pouces Crystal UHD;Électroménager;Samsung;Baobab Shop;244400;251100;6700;2.7;NON;2;251100;244400;
+P10;Xiaomi Redmi Note 13 128 Go;Smartphone;Xiaomi;Baobab Shop;134100;136900;2800;2.1;NON;2;136900;134100;
+P04;Tecno Spark 20 128 Go;Smartphone;Tecno;Baobab Shop;75000;76300;1300;1.7;NON;2;;75000;76300
+P05;Tecno Camon 30 256 Go;Smartphone;Tecno;Baobab Shop;135400;136900;1500;1.1;NON;2;136900;135400;
+P07;Infinix Note 40 256 Go;Smartphone;Infinix;Marché Lagune;132400;132700;300;0.2;NON;2;132400;132700;
+P16;Souris sans fil Logitech M185;Informatique;Logitech;Marché Lagune / Comptoir Ivoire;9200;9200;0;0.0;NON;2;9200;;9200
+P27;Fer à repasser Philips;Électroménager;Philips;Marché Lagune / Comptoir Ivoire;15700;15700;0;0.0;NON;2;15700;;15700
