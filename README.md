@@ -1,15 +1,17 @@
 # Analyse comparative de marché
 
-**Trois boutiques en ligne vendent les mêmes produits, mais avec des catalogues écrits différemment et des prix différents. Pour chaque produit, où faut-il acheter, et quel écart de prix existe-t-il ?**
+**Trois boutiques en ligne vendent les mêmes produits, mais avec des catalogues
+écrits différemment et des prix différents. Pour chaque produit, où faut-il
+acheter, et quel écart de prix existe-t-il ?**
 
 Ce projet répond à cette question avec une chaîne complète :
 
-```
+```text
 Collecter → Normaliser → Indexer / Rapprocher → Comparer → Décider
 ```
 
-Il est écrit en **Python**, en architecture **MVC**, avec une base de données
-fictive fournie dans `data/` (CSV, JSON et Excel).
+Il est écrit en **Python**, en architecture **MVC**, avec les données fictives
+fournies dans `data/` (CSV, JSON et Excel).
 
 ---
 
@@ -40,8 +42,10 @@ prix réellement payés, puis dire :
 
 ## 2. Ce que le programme produit
 
-1. **Collecte** : lecture des trois formats (CSV, JSON, Excel) et de
-   `historique_prix.csv`.
+Le programme répond aux huit points de l'énoncé :
+
+1. **Chargement** : lecture des trois formats (CSV, JSON, Excel) dans une même
+   structure `Offre`.
 2. **Nettoyage** : normalisation des noms, des prix, des unités et des
    disponibilités. Chaque problème est écrit dans un **journal**.
 3. **Rapprochement** : chaque offre reçoit un `produit_id` du catalogue
@@ -56,10 +60,12 @@ prix réellement payés, puis dire :
 7. **Historique** : comparaison de la semaine du Black Friday (24–30 novembre
    2025) avec la moyenne annuelle, et meilleur mois par enseigne.
 8. **Complexité** : temps mesurés pour la recherche naïve et la recherche
-   indexée.
+   indexée dans l'historique.
 
-Les résultats sont affichés dans la console et dans un rapport HTML
-autonome : `reports/rapport.html`.
+Les résultats sont affichés dans la console et exportés dans :
+
+- `reports/comparatif.csv` ;
+- `reports/journal_nettoyage.csv`.
 
 ---
 
@@ -136,8 +142,7 @@ les trois enseignes.
 
 | Opération | Version naïve | Version indexée | Gain |
 |---|---:|---:|---:|
-| 500 recherches dans 20 876 lignes | ≈ 400 ms | ≈ 0,24 ms | ×1 600 |
-| 100 recherches dans 20 000 produits | ≈ 27 ms | ≈ 2,4 ms | ×11 |
+| 500 recherches dans 20 876 lignes | ≈ 230 ms | ≈ 0,09 ms | ×2 500 |
 
 Les temps varient selon la machine ; le benchmark est refait à chaque
 exécution.
@@ -165,12 +170,6 @@ pip install -r requirements.txt
 # Lancer l'analyse complète
 python main.py
 
-# Lancer le menu interactif
-python main.py --menu
-
-# Ne pas refaire le benchmark (plus rapide)
-python main.py --no-benchmark
-
 # Lancer les tests
 python -m unittest discover -s tests -v
 ```
@@ -187,13 +186,12 @@ Si PowerShell refuse d'activer l'environnement virtuel, utilisez directement :
 |---|---|
 | `reports/comparatif.csv` | tableau produit par produit (séparateur `;`, UTF-8 BOM pour Excel) |
 | `reports/journal_nettoyage.csv` | toutes les anomalies et les actions appliquées |
-| `reports/rapport.html` | rapport visuel complet, à ouvrir dans un navigateur |
 
 ---
 
 ## 5. Architecture MVC
 
-```
+```text
 ANALYSE_DU_MARCHE/
 ├── main.py                         # point d'entrée
 ├── data/                           # les 5 fichiers de l'exercice
@@ -215,10 +213,9 @@ ANALYSE_DU_MARCHE/
 │   ├── comparaison_service.py      # min/max/écart + synthèse
 │   ├── panier_service.py           # coût par boutique + combinaison optimale
 │   ├── historique.py               # chargement et analyse du Black Friday
-│   └── benchmark_service.py        # mesures de temps
+│   └── benchmark_service.py        # mesure de la recherche dans l'historique
 ├── Views/                          # l'affichage
-│   ├── Interface.py                # vue console
-│   └── html_view.py                # vue HTML autonome
+│   └── Interface.py                # vue console
 ├── Controllers/
 │   └── Analyse_Controller.py       # orchestre le pipeline
 ├── tests/
@@ -229,10 +226,10 @@ ANALYSE_DU_MARCHE/
 ### Qui fait quoi ?
 
 - **Modèle** (`Models/` + `Services/`) : les données et les règles métier.
-  Il ne connaît ni la console ni le HTML.
+  Il ne connaît pas la console.
 - **Vue** (`Views/`) : met en forme les objets calculés. Elle ne calcule rien.
-- **Contrôleur** (`Controllers/`) : appelle les services dans le bon ordre,
-  mesure les temps et transmet le résultat à la vue.
+- **Contrôleur** (`Controllers/`) : appelle les services dans le bon ordre et
+  transmet le résultat à la vue.
 
 Les `Services` sont rangés avec le Modèle : ce sont des règles métier, pas
 de l'affichage. C'est une séparation MVC un peu enrichie, courante en Python.
@@ -268,7 +265,7 @@ l'étape, la source, la référence, le problème, l'action et la gravité.
 
 On transforme le nom en une forme canonique :
 
-```
+```text
 "SAMSUNG GALAXY A15 (128GB)"       → "samsung galaxy a15 128gb"
 "Galaxy A15 128GB - Samsung"       → "galaxy a15 128gb samsung"
 "Samsun Galaxy A15 128Go"          → "samsun galaxy a15 128gb"
@@ -290,7 +287,7 @@ Pour chaque nom normalisé, on extrait :
 
 Au lieu de comparer chaque offre aux 30 produits, on construit :
 
-```
+```text
 mot → liste des produits qui contiennent ce mot
 ```
 
@@ -318,7 +315,7 @@ C'est ce qui évite de confondre :
 
 Pour les candidats restants, on calcule un score entre 0 et 1 :
 
-```
+```text
 rappel    = mots communs / mots du produit de référence
 précision = mots communs / mots de l'offre
 F1        = 2 × rappel × précision / (rappel + précision)
@@ -343,7 +340,7 @@ Exemple :
 
 Pour chaque produit disponible dans au moins deux boutiques :
 
-```
+```text
 prix_min = minimum des prix payés
 prix_max = maximum des prix payés
 écart    = prix_max − prix_min
@@ -399,7 +396,7 @@ Les produits y sont déjà identifiés par `produit_id`.
 
 Pour chaque enseigne :
 
-```
+```text
 moyenne annuelle = moyenne de tous les prix
 moyenne BF       = moyenne des prix du 24 au 30 novembre 2025
 variation %      = (moyenne BF − moyenne annuelle) / moyenne annuelle × 100
@@ -450,18 +447,16 @@ C'est pour cela que :
 - les offres sont regroupées par `produit_id` ;
 - le rapprochement utilise un index `mot → produits`.
 
-### Mesures
+### Mesure
 
-Le benchmark compare, sur la même machine :
+Le benchmark compare, sur la même machine, **500 recherches** dans les
+20 876 lignes :
 
-- **500 recherches** dans les 20 876 lignes : parcours complet contre
-  dictionnaire ;
-- **100 recherches** dans des catalogues synthétiques de 1 000, 5 000 et
-  20 000 produits : boucle contre index.
+- parcours complet de la liste ;
+- dictionnaire indexé.
 
-Les résultats sont affichés dans la console et dans le rapport HTML. Ils
-montrent que la version indexée est plusieurs centaines de fois plus rapide
-sur l'historique, et plusieurs fois plus rapide sur les gros catalogues.
+Les résultats sont affichés dans la console. Ils montrent que la version
+indexée est plusieurs centaines de fois plus rapide.
 
 ---
 
@@ -488,20 +483,19 @@ Les 10 tests couvrent :
 
 ## 13. Mettre le projet sur GitHub
 
-Le dossier n'est pas encore un dépôt Git. Depuis la racine du projet :
-
-```powershell
-git init
-git add .
-git commit -m "Analyse comparative de marché - MVC"
-git branch -M main
-```
-
-Créer ensuite un dépôt vide sur GitHub (sans README, sans .gitignore), puis :
+Le dossier est déjà un dépôt Git local. Pour le publier, créer un dépôt
+**vide** sur GitHub (sans README, sans `.gitignore`), puis :
 
 ```powershell
 git remote add origin https://github.com/<votre-utilisateur>/<nom-du-depot>.git
 git push -u origin main
+```
+
+Avec GitHub CLI :
+
+```powershell
+gh auth login
+gh repo create <nom-du-depot> --public --source=. --remote=origin --push
 ```
 
 Le fichier `.gitignore` exclut déjà `.venv/`, `__pycache__/` et `.idea/`.
@@ -512,12 +506,7 @@ git status
 ```
 
 Si Git demande une authentification, utilisez un **Personal Access Token**
-GitHub, ou l'outil `gh` :
-
-```powershell
-gh auth login
-gh repo create <nom-du-depot> --public --source=. --remote=origin --push
-```
+GitHub, ou l'outil `gh`.
 
 ---
 

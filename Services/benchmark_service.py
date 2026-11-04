@@ -1,7 +1,9 @@
-"""Mesures de temps : recherche historique et recherche dans un catalogue.
+"""Mesure du temps de recherche dans l'historique des prix.
 
-On mesure deux approches pour la même opération :
-- parcours complet (boucle) : O(q × n) ;
+L'énoncé demande de chercher des prix dans un historique de plus de
+20 000 lignes et de mesurer le temps. On compare deux approches pour la
+même opération :
+- parcours complet de la liste : O(q × n) ;
 - index en mémoire (dict) : O(q), avec O(n) de construction.
 
 Les mesures sont refaites à chaque exécution, sur la machine de l'étudiant.
@@ -13,9 +15,7 @@ import random
 from time import perf_counter
 
 from Models.Analyse import MesureBenchmark
-from Models.Produit import Produit
 from Services.historique import Historique
-from Services.normalisation_service import normaliser_texte
 
 
 def benchmark_historique(historique: Historique,
@@ -51,69 +51,3 @@ def benchmark_historique(historique: Historique,
         complexite_naive="O(q × n)",
         complexite_index="O(q)",
     )
-
-
-def _catalogue_synthetique(produits: list[Produit], taille: int) -> list[Produit]:
-    """Répète les produits réels avec un numéro unique pour créer N produits."""
-    resultat: list[Produit] = []
-    for index in range(taille):
-        modele = produits[index % len(produits)]
-        resultat.append(Produit(
-            produit_id=f"X{index:06d}",
-            nom=f"{modele.nom} serie {index}",
-            categorie=modele.categorie,
-            marque=modele.marque,
-        ))
-    return resultat
-
-
-def benchmark_correspondance(produits: list[Produit],
-                             tailles: tuple[int, ...] = (1000, 5000, 20000),
-                             nb_requetes: int = 100) -> list[MesureBenchmark]:
-    """Compare la recherche par nom : boucle O(q×n) contre dict O(q).
-
-    Ce benchmark illustre le principe de l'index inversé utilisé dans le
-    rapprochement réel : au lieu de parcourir tout le catalogue, on va
-    directement aux candidats.
-    """
-    mesures: list[MesureBenchmark] = []
-
-    for taille in tailles:
-        catalogue = _catalogue_synthetique(produits, taille)
-        # On normalise une seule fois les noms : la comparaison porte bien
-        # sur la structure de recherche, pas sur le coût de normalisation.
-        noms = [(normaliser_texte(p.nom), p) for p in catalogue]
-        generateur = random.Random(42)
-        positions = generateur.sample(
-            range(taille), min(nb_requetes, taille)
-        )
-        requetes = [noms[i][0] for i in positions]
-
-        # Version naïve : pour chaque requête, on parcourt le catalogue.
-        debut = perf_counter()
-        for nom_cherche in requetes:
-            trouve = None
-            for nom, produit in noms:
-                if nom == nom_cherche:
-                    trouve = produit
-                    break
-            _ = trouve
-        temps_naif = perf_counter() - debut
-
-        # Version indexée : on construit un dictionnaire une fois.
-        debut = perf_counter()
-        index = {nom: p for nom, p in noms}
-        for nom_cherche in requetes:
-            _ = index.get(nom_cherche)
-        temps_index = perf_counter() - debut
-
-        mesures.append(MesureBenchmark(
-            libelle=f"Recherche par nom ({taille} produits)",
-            taille=taille,
-            temps_naif=temps_naif,
-            temps_index=temps_index,
-            complexite_naive="O(q × n)",
-            complexite_index="O(q) après O(n)",
-        ))
-
-    return mesures

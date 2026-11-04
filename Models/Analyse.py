@@ -54,7 +54,6 @@ class MesureBenchmark:
 @dataclass
 class ResultatBenchmark:
     historique: list[MesureBenchmark] = field(default_factory=list)
-    correspondance: list[MesureBenchmark] = field(default_factory=list)
     nb_requetes: int = 0
 
 
@@ -67,5 +66,4 @@ class ResultatAnalyse:
     panier: ResultatPanier
     historique: ResultatHistorique
     journal: Journal
-    temps: dict[str, float] = field(default_factory=dict)
     benchmark: ResultatBenchmark | None = None

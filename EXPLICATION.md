@@ -1,28 +1,22 @@
-# Explication complète du projet
+# Explication du projet
 
 **Analyse comparative de marché — trois boutiques, un catalogue**
 
-Ce document est écrit pour toi, pas pour le correcteur. Il reprend le sujet
-avec des mots simples, explique chaque fichier, chaque étape et chaque choix,
-puis propose un plan d'exposé et les questions que le professeur peut poser.
-
-> Conseil de lecture : lis d'abord les sections 1 à 4 pour comprendre
-> l'objectif. Ensuite, garde les sections 6 et 7 ouvertes pendant que tu
-> relis le code. La section 10 est ton plan d'exposé.
+Ce document explique le sujet, le code et les résultats, avec des mots
+simples. Il sert à comprendre le projet et à préparer l'exposé oral.
 
 ---
 
-## 1. Le sujet raconté simplement
+## 1. Le sujet en clair
 
-Un client à Abidjan veut acheter de l'électronique et de l'électroménager.
-Trois enseignes vendent des produits proches :
+Un client à Abidjan hésite entre trois enseignes :
 
-- **Marché Lagune** : un site marchand, fichier CSV séparé par des `;` ;
-- **Baobab Shop** : une application mobile, fichier JSON ;
-- **Comptoir Ivoire** : une boutique d'Adjamé, fichier Excel.
+- **Marché Lagune** : site marchand, fichier CSV séparé par des `;` ;
+- **Baobab Shop** : application mobile, fichier JSON ;
+- **Comptoir Ivoire** : boutique d'Adjamé, fichier Excel.
 
-Le problème n'est pas de lire les fichiers. Le problème est que **les trois
-boutiques ne parlent pas le même langage** :
+Les trois boutiques vendent des produits proches, mais elles écrivent les noms
+et les prix différemment :
 
 | Catalogue commun | Marché Lagune | Baobab Shop | Comptoir Ivoire |
 |---|---|---|---|
@@ -30,20 +24,20 @@ boutiques ne parlent pas le même langage** :
 | Clé USB SanDisk 64 Go | `CLE USB SANDISK 64GB` | `SanDisk USB Flash Drive 64GB` | `Cle USB Sandisk 64 Go` |
 | Climatiseur LG 1 CV | `CLIMATISEUR LG 1CV` | `LG Air Conditioner 1HP` | `Climatiseur LG 1 CV` |
 
-Il faut donc :
+Le programme doit :
 
-1. **collecter** les trois sources dans une même structure ;
-2. **nettoyer** les noms, les prix, les unités et les disponibilités ;
+1. **collecter** les trois sources ;
+2. **nettoyer** les noms, les prix et les disponibilités ;
 3. **rapprocher** chaque offre du bon produit du catalogue (`P01` à `P30`) ;
 4. **comparer** les prix réellement payés ;
-5. **décider** où acheter, et quels écarts surveiller.
+5. **décider** où acheter, calculer le panier et analyser l'historique.
 
-La question finale à laquelle le programme répond est :
+La question finale :
 
 > Pour chaque produit, quelle boutique est la moins chère, quel est l'écart
 > avec la plus chère, et que faut-il acheter où ?
 
-### La phrase à retenir pour l'exposé
+### La phrase à retenir
 
 > « Trois boutiques, un même catalogue, des noms et des prix écrits
 > différemment : mon programme les rapproche, compare le prix réellement payé,
@@ -51,11 +45,9 @@ La question finale à laquelle le programme répond est :
 
 ---
 
-## 2. Ce que le professeur demande exactement
+## 2. Les huit consignes de l'énoncé
 
-Le sujet contient huit consignes. Voici où chacune est traitée dans le code :
-
-| Consigne du sujet | Fichier(s) principal(aux) | Ce que le programme fait |
+| Consigne | Fichier(s) | Ce que le programme fait |
 |---|---|---|
 | 1. Chargement des trois formats | `Services/csv_service.py`, `json_service.py`, `excel_service.py` | Transforme CSV, JSON et Excel en objets `Offre` |
 | 2. Nettoyage + journal | `Services/normalisation_service.py`, `Models/Journal.py` | Corrige les noms et prix, note chaque anomalie |
@@ -66,21 +58,20 @@ Le sujet contient huit consignes. Voici où chacune est traitée dans le code :
 | 7. Historique / Black Friday | `Services/historique.py` | Moyenne annuelle, moyenne BF, meilleur mois |
 | 8. Complexité | `Services/benchmark_service.py` | Compare recherche naïve et recherche indexée |
 
-Et la consigne d'architecture :
+L'énoncé demande aussi une architecture **MVC** :
 
 | Rôle MVC | Dossier | Responsabilité |
 |---|---|---|
 | **Modèle** | `Models/` + `Services/` | Données et règles métier |
-| **Vue** | `Views/` | Affichage console et HTML |
+| **Vue** | `Views/` | Affichage console |
 | **Contrôleur** | `Controllers/` | Orchestration du pipeline |
 
-> En Python, il est courant de mettre les services métier avec le modèle.
-> `Models/` contient les objets, `Services/` contient les traitements. Les deux
-> forment la couche Modèle : ils ne connaissent ni la console ni le HTML.
+En Python, il est courant de mettre les services métier avec le modèle.
+`Models/` contient les objets, `Services/` contient les traitements.
 
 ---
 
-## 3. Les cinq fichiers de données et leurs pièges
+## 3. Les cinq fichiers de données
 
 Les fichiers sont dans `data/`. L'énoncé original est dans
 `docs/LISEZ-MOI.md`.
@@ -96,52 +87,49 @@ Les fichiers sont dans `data/`. L'énoncé original est dans
 Total collecté : **28 + 26 + 22 = 76 offres**. Les 30 lignes de Marché
 Lagune deviennent 28 après suppression de deux doublons.
 
-### Les pièges concrets
+### Les pièges
 
-| Piège | Exemple dans les données | Traitement dans le code |
+| Piège | Exemple | Traitement |
 |---|---|---|
-| Doublons | `ML-1000` et `ML-1147` apparaissent deux fois | `dedupliquer()` garde la première ligne et journalise |
-| Prix absent | `Prix sur demande`, cellule vide, `amount: null` | `parser_prix()` renvoie `None`, l'offre est écartée |
-| Prix incohérent | Tecno Spark 20 à `779 000 FCFA` avec ancien prix `88 700 FCFA` | ratio 8,78 : offre écartée et journalisée |
-| Rupture | `Rupture`, `stock: 0`, `Quantité en rayon: 0` | `disponible = False`, jamais retenue comme moins chère |
-| Marque mal orthographiée | `Samsun Galaxy A15` | `difflib` corrige en Samsung (similarité ≥ 0,85) |
-| Prix écrit en texte | `"279 300"` dans Excel | `parser_prix()` le convertit en `279300` |
-| Unités différentes | `Go`/`GB`, `To`/`TB`, `CV`/`HP` | normalisées en `gb`, `tb`, `hp` |
-| Noms dans un autre ordre | `Galaxy A15 128GB - Samsung` | normalisation + ensemble de mots |
-| Synonymes | frigo / fridge / réfrigérateur | dictionnaire `SYNONYMES` |
-| Une seule boutique | P18, P19, P25, P30… | produit listé comme non comparable |
+| Doublons | `ML-1000` et `ML-1147` deux fois | `dedupliquer()` garde la première ligne |
+| Prix absent | `Prix sur demande`, cellule vide, `amount: null` | offre écartée |
+| Prix incohérent | Tecno à `779 000 FCFA` avec ancien prix `88 700 FCFA` | ratio 8,78 : offre écartée |
+| Rupture | `Rupture`, `stock: 0`, `Quantité en rayon: 0` | offre exclue |
+| Marque mal orthographiée | `Samsun Galaxy A15` | corrigée en Samsung |
+| Prix écrit en texte | `"279 300"` dans Excel | converti en `279300` |
+| Unités différentes | `Go`/`GB`, `To`/`TB`, `CV`/`HP` | normalisées |
+| Noms dans un autre ordre | `Galaxy A15 128GB - Samsung` | normalisation + mots |
+| Synonymes | frigo / fridge / réfrigérateur | dictionnaire de synonymes |
+| Une seule boutique | P18, P19, P25, P30… | produit non comparable |
 
 ### Pourquoi avoir écarté le prix de 779 000 FCFA ?
 
-Le prix affiché est `779 000 FCFA`, mais l'ancien prix est `88 700 FCFA`.
-Le ratio vaut :
+Le prix affiché est `779 000 FCFA`, mais l'ancien prix est `88 700 FCFA` :
 
 ```text
 779 000 / 88 700 ≈ 8,78
 ```
 
 Un prix qui multiplie l'ancien prix par presque 9 est manifestement une erreur
-de saisie. Le programme ne le « corrige » pas au hasard : il **écarte l'offre**
-et écrit la raison dans le journal. C'est plus honnête que d'inventer un prix.
+de saisie. Le programme ne le corrige pas au hasard : il **écarte l'offre** et
+écrit la raison dans le journal.
 
-C'est aussi pour cela que le panier de Marché Lagune est **incomplet** : sans
-cette offre, le Tecno Spark 20 n'a pas de prix exploitable chez Marché.
+C'est pour cela que le panier de Marché Lagune est **incomplet** : sans cette
+offre, le Tecno Spark 20 n'a pas de prix exploitable chez Marché.
 
 ### Les trois formules de prix payé
 
 | Boutique | Formule | Pourquoi |
 |---|---|---|
-| Marché Lagune | `prix affiché` | La livraison est déjà incluse |
+| Marché Lagune | `prix affiché` | Livraison déjà incluse |
 | Baobab Shop | `amount + delivery_fee` | Le client paie les deux |
-| Comptoir Ivoire | `prix catalogue × (1 − remise / 100)` | Le client vient chercher l'article |
+| Comptoir Ivoire | `prix catalogue × (1 − remise / 100)` | Retrait en boutique |
 
-C'est le **prix payé** qui est comparé, pas le prix affiché. C'est un point
-important à dire à l'oral : deux boutiques peuvent afficher 100 000 FCFA et ne
-pas coûter le même prix final.
+C'est le **prix payé** qui est comparé, pas le prix affiché.
 
 ---
 
-## 4. Le pipeline complet
+## 4. Le pipeline
 
 ```text
 Fichiers bruts
@@ -172,11 +160,10 @@ Fichiers bruts
              │
              ▼
       8. EXPORTS
-      → comparatif.csv, journal_nettoyage.csv, rapport.html
+      → comparatif.csv, journal_nettoyage.csv
              │
              ▼
-      9. VUES
-      → console + rapport HTML
+      9. VUE CONSOLE
 ```
 
 ### Exemple concret : le HP 250 G9 (P11)
@@ -185,20 +172,16 @@ Fichiers bruts
    `PC PORTABLE HP 250 G9 I5 8GB/512GB` à `390 800 FCFA` ; Baobab vend un
    nom proche à `354 200 FCFA` ; Comptoir vend `HP 250 G9 i5 8Go 512Go` avec
    une remise.
-2. **Normalisation** : les trois noms deviennent des formes canoniques
-   comparables ; les prix deviennent des entiers.
+2. **Normalisation** : les trois noms deviennent des formes canoniques ; les
+   prix deviennent des entiers.
 3. **Rapprochement** : les trois offres reçoivent `P11`.
 4. **Comparaison** : prix min = `354 200`, prix max = `407 000`,
    écart = `52 800 FCFA`, soit `14,9 %`.
 5. **Décision** : acheter chez Baobab ; écart supérieur à 10 %, donc alerte.
 
-C'est exactement le genre d'exemple à montrer en démonstration.
-
 ---
 
 ## 5. L'architecture MVC
-
-### 5.1 Le schéma
 
 ```text
 main.py
@@ -218,32 +201,31 @@ Controllers/Analyse_Controller.py
    ├── fabrique des objets Models
    │      └── Produit, Offre, Journal, Analyse, Panier, Historique
    │
-   └── transmet le résultat aux Views
-          ├── Interface.py  → console
-          └── html_view.py  → rapport HTML
+   └── transmet le résultat à la Vue
+          └── Interface.py → console
 ```
 
-### 5.2 Qui fait quoi ?
+### Qui fait quoi ?
 
 - **Modèle** : les données (`Produit`, `Offre`, `Journal`…) et les règles
   (`normaliser`, `rapprocher`, `comparer`…). Il ne fait aucun `print`.
 - **Vue** : elle reçoit un résultat déjà calculé et le met en forme. Elle ne
   calcule rien.
-- **Contrôleur** : il choisit l'ordre des étapes, mesure les temps et appelle
-  la bonne vue. Il ne contient pas la formule du score de rapprochement.
+- **Contrôleur** : il choisit l'ordre des étapes et appelle la bonne vue. Il
+  ne contient pas la formule du score de rapprochement.
 
-### 5.3 Pourquoi cette séparation est utile
+### Pourquoi cette séparation est utile
 
-- On peut changer l'affichage (console → HTML) sans toucher aux calculs.
+- On peut changer l'affichage sans toucher aux calculs.
 - On peut tester les calculs sans lancer l'interface.
 - Le code est plus facile à expliquer : chaque dossier a une seule mission.
 - C'est la réponse attendue à la question « pourquoi MVC ? ».
 
-### 5.4 Arborescence commentée
+### Arborescence
 
 ```text
 ANALYSE_DU_MARCHE/
-├── main.py                         # point d'entrée, arguments CLI
+├── main.py                         # point d'entrée
 ├── data/                           # les 5 fichiers de l'exercice
 ├── docs/LISEZ-MOI.md               # énoncé original
 ├── Models/
@@ -262,59 +244,38 @@ ANALYSE_DU_MARCHE/
 │   ├── comparaison_service.py      # min/max/écart + synthèse
 │   ├── panier_service.py           # coût par boutique + combinaison
 │   ├── historique.py               # chargement et analyse du Black Friday
-│   └── benchmark_service.py        # mesures de complexité
+│   └── benchmark_service.py        # mesure de la recherche historique
 ├── Views/
-│   ├── Interface.py                # vue console
-│   └── html_view.py                # rapport HTML autonome
+│   └── Interface.py                # vue console
 ├── Controllers/
 │   └── Analyse_Controller.py       # orchestration
 ├── tests/
 │   └── test_services.py            # 10 tests unitaires
-├── reports/                        # sorties générées
+├── reports/                        # comparatif.csv et journal
 ├── EXPLICATION.md                  # ce document
-├── README.md                       # documentation du projet
+├── README.md                       # documentation
 ├── requirements.txt                # openpyxl
 └── .gitignore
 ```
 
-### 5.5 Le trajet d'un clic (ou d'une commande)
-
-Quand on lance `python main.py` :
-
-1. `main.py` lit les arguments (`--menu`, `--no-benchmark`).
-2. Il crée `AnalyseController`.
-3. Le contrôleur vérifie que les 5 fichiers existent.
-4. Il appelle les services dans l'ordre : collecte → normalisation →
-   rapprochement → comparaison → panier → historique → benchmark.
-5. Il construit un `ResultatAnalyse`.
-6. Il exporte les CSV et le HTML.
-7. La vue console affiche le résultat.
-
-Aucune vue ne lit un fichier. Aucun service ne fait de `print`. C'est le
-principe du MVC.
-
 ---
 
-## 6. Le code expliqué fichier par fichier
+## 6. Le code expliqué
 
-### 6.1 `main.py` : le point d'entrée
+### 6.1 `main.py`
 
-Rôle : lire les options et lancer le contrôleur.
+Rôle : forcer l'UTF-8, créer le contrôleur, lancer l'analyse et afficher le
+résultat dans la console.
 
 ```python
-parseur.add_argument("--menu", action="store_true")
-parseur.add_argument("--no-benchmark", action="store_true")
+controleur = AnalyseController()
+resultat = controleur.executer()
+controleur.vue.afficher_resultat(resultat)
 ```
 
-- `--menu` ouvre le menu interactif après l'analyse.
-- `--no-benchmark` évite les mesures de temps (plus rapide).
+### 6.2 `Controllers/Analyse_Controller.py`
 
-`configurer_console()` force l'UTF-8 pour éviter les accents cassés sous
-Windows.
-
-### 6.2 `Controllers/Analyse_Controller.py` : le chef d'orchestre
-
-La méthode centrale est `executer()`. Elle suit toujours le même ordre :
+C'est le chef d'orchestre. `executer()` suit toujours le même ordre :
 
 ```python
 produits = lire_catalogue(...)
@@ -332,18 +293,15 @@ panier = analyser_panier(offres, produits)
 historique = Historique(...).charger(journal)
 ```
 
-Chaque étape est chronométrée avec `perf_counter()` et rangée dans
-`temps["collecte"]`, `temps["normalisation"]`, etc.
-
 Le contrôleur ne calcule pas les prix : il appelle les services. Il ne met pas
-en forme : il appelle les vues.
+en forme : il appelle la vue.
 
 ### 6.3 Les modèles
 
 #### `Produit`
 
-Un produit du catalogue est **immuable** (`frozen=True`) : une fois créé, on ne
-le modifie plus. Il sert de référence commune.
+Un produit du catalogue est **immuable** (`frozen=True`) : une fois créé, on
+ne le modifie plus. Il sert de référence commune.
 
 ```python
 @dataclass(frozen=True)
@@ -356,7 +314,7 @@ class Produit:
 
 #### `Offre`
 
-C'est l'objet le plus important. Il contient deux couches :
+C'est l'objet central. Il contient :
 
 - les **valeurs brutes** lues dans le fichier (`designation_brute`,
   `prix_source`, `frais_livraison`, `remise_pct`, `stock`…) ;
@@ -374,7 +332,7 @@ def prix_effectif(self):
 ```
 
 Ainsi, une rupture ou un prix absent ne peut **jamais** être choisi comme
-« moins cher », même si l'objet contient encore un ancien prix.
+« moins cher ».
 
 #### `Journal`
 
@@ -386,22 +344,18 @@ Chaque anomalie devient une ligne avec :
 - l'action appliquée ;
 - la gravité (`INFO`, `AVERTISSEMENT`, `ERREUR`).
 
-C'est la preuve que le nettoyage a été fait sérieusement. Le journal est
-exporté dans `reports/journal_nettoyage.csv`.
+Le journal est exporté dans `reports/journal_nettoyage.csv`.
 
 #### `Analyse`, `Panier`, `Historique`
 
-Ces modèles sont des **structures de résultat** :
+Ces modèles transportent les résultats :
 
 - `LigneComparaison` : une ligne du tableau comparatif ;
 - `Synthese` : victoires, surcoût moyen, top 3, produits non comparés ;
 - `ResultatPanier` : lignes, totaux par boutique, total optimal, économie ;
 - `StatsSource` : moyenne annuelle, Black Friday, meilleur mois.
 
-Ils ne contiennent pas de logique : ils transportent des données entre les
-services et les vues.
-
-### 6.4 La collecte : trois formats, une seule structure
+### 6.4 La collecte
 
 #### CSV
 
@@ -436,11 +390,11 @@ if any("code" in t for t in textes) and any("article" in t for t in textes):
 
 C'est plus robuste si le professeur décale les colonnes.
 
-### 6.5 La normalisation : le vrai nettoyage
+### 6.5 La normalisation
 
 #### `normaliser_texte()`
 
-Elle transforme un nom en forme canonique. Exemple :
+Elle transforme un nom en forme canonique :
 
 ```text
 "SAMSUNG GALAXY A15 (128GB)"
@@ -497,9 +451,9 @@ C'est ici que le prix de `779 000 FCFA` est écarté.
 Utilise un `set` de couples `(source, référence)`. Si le couple est déjà vu,
 la ligne est ignorée et journalisée. Complexité : `O(n)`.
 
-### 6.6 Le rapprochement : reconnaître le même produit
+### 6.6 Le rapprochement
 
-C'est la partie la plus interessante du projet.
+C'est la partie la plus intéressante du projet.
 
 #### Étape 1 : la signature
 
@@ -536,8 +490,8 @@ a15  → [P01]
 1hp  → [P24]
 ```
 
-Une offre ne compare donc qu'aux produits qui partagent au moins un mot. C'est
-ce qui évite le `O(n × m)`.
+Une offre ne compare donc qu'aux produits qui partagent au moins un mot.
+C'est ce qui évite le `O(n × m)`.
 
 #### Étape 3 : les règles de rejet
 
@@ -570,8 +524,8 @@ score     = 0,7 × F1 + 0,2 × rappel + 0,1 × bonus de marque
 - `bonus de marque` : 1 si la marque est la même, 0 sinon.
 
 Si le score est inférieur à **0,60**, l'offre n'est pas reconnue. Si le score
-est inférieur à **0,80**, la correspondance est acceptée mais signalée dans le
-journal pour vérification.
+est inférieur à **0,80**, la correspondance est acceptée mais signalée dans
+le journal pour vérification.
 
 Exemples réels :
 
@@ -590,8 +544,7 @@ Il a été choisi après observation des scores sur ce catalogue :
 - 0,60 laisse passer les noms très différents comme `Seagate Expansion 1TB`,
   tout en restant prudent.
 
-C'est un **paramètre métier**, pas une vérité absolue. On pourrait l'ajuster
-avec un autre catalogue.
+C'est un **paramètre métier**, pas une vérité absolue.
 
 ### 6.7 La comparaison
 
@@ -663,17 +616,8 @@ Donc si un article coûte moins cher chez A et un autre moins cher chez B, il
 faut acheter le premier chez A et le second chez B. Le coût total est la somme
 des meilleurs prix. Ce n'est **pas** le minimum des totaux par boutique.
 
-> Si on ajoutait des frais de livraison fixes par boutique, le problème
-> deviendrait plus complexe (proche d'un problème de couverture / sac à dos).
-> C'est une extension possible, à mentionner comme limite.
-
 Le programme calcule aussi le coût si l'on achète **tout dans une seule
-boutique**, mais seulement si cette boutique a tous les articles. C'est ce qui
-permet de comparer :
-
-- `477 575 FCFA` en éclatant les achats ;
-- `484 075 FCFA` chez Comptoir Ivoire ;
-- économie : `6 500 FCFA`.
+boutique**, mais seulement si cette boutique a tous les articles.
 
 ### 6.9 L'historique
 
@@ -698,19 +642,17 @@ variation %      = (moyenne BF − moyenne annuelle) / moyenne annuelle × 100
 
 Une variation négative signifie que le Black Friday était moins cher.
 
-Le programme calcule aussi le **mois le moins cher** : il regroupe les prix par
-`AAAA-MM`, fait la moyenne, puis prend le mois dont la moyenne est minimale.
+Le programme calcule aussi le **mois le moins cher** : il regroupe les prix
+par `AAAA-MM`, fait la moyenne, puis prend le mois dont la moyenne est
+minimale.
 
 Point important : pour Comptoir Ivoire, l'historique contient le **prix
-catalogue**, sans la remise. C'est précisé dans l'énoncé. C'est pour cela que
-sa variation Black Friday n'est pas comparable directement aux deux autres.
+catalogue**, sans la remise. C'est précisé dans l'énoncé.
 
 ### 6.10 Le benchmark
 
-Le benchmark répond à la consigne « mesurer le temps et expliquer les choix de
-structures de données ».
-
-#### Recherche dans l'historique
+L'énoncé demande de mesurer le temps de recherche dans un historique de plus
+de 20 000 lignes et d'expliquer les choix de structures de données.
 
 - **Naïve** : parcourir les 20 876 lignes pour chaque requête → `O(q × n)`.
 - **Indexée** : dictionnaire `(source, produit_id)` → `O(1)` par requête,
@@ -725,47 +667,16 @@ def rechercher_index(self, source, produit_id):
     return self.par_cle.get((source, produit_id), [])
 ```
 
-#### Recherche dans un catalogue synthétique
-
-Le benchmark crée des catalogues de 1 000, 5 000 et 20 000 produits, puis
-compare :
-
-- une boucle qui parcourt tout le catalogue ;
-- un dictionnaire `nom → produit`.
-
-Résultat typique : la version indexée est plusieurs fois plus rapide, et
-l'écart se creuse quand le catalogue grandit.
+Le benchmark fait 500 recherches avec les deux méthodes et affiche les temps.
 
 #### Pourquoi les temps varient
 
-Les temps dépendent de la machine, du système et des autres programmes. Les
-chiffres du README sont des exemples. Ce qui compte, c'est le **rapport** entre
-les deux versions, pas la milliseconde près.
+Les temps dépendent de la machine, du système et des autres programmes. Ce qui
+compte, c'est le **rapport** entre les deux versions, pas la milliseconde près.
 
-### 6.11 Les vues
+### 6.11 La vue console
 
-#### `Views/Interface.py`
-
-Affiche :
-
-- les titres et tableaux console ;
-- le comparatif ;
-- la synthèse ;
-- le panier ;
-- l'historique ;
-- le journal ;
-- le benchmark ;
-- les temps.
-
-Elle ne calcule rien : elle reçoit `ResultatAnalyse` et formate.
-
-#### `Views/html_view.py`
-
-Génère un fichier HTML **autonome** : pas de serveur, pas de bibliothèque
-externe. On peut l'ouvrir directement dans un navigateur ou l'envoyer au
-professeur.
-
-Le HTML contient :
+`Views/Interface.py` affiche :
 
 - la collecte et le rapprochement ;
 - le journal ;
@@ -773,8 +684,9 @@ Le HTML contient :
 - la synthèse ;
 - le panier ;
 - l'historique ;
-- le benchmark ;
-- les temps par étape.
+- le benchmark.
+
+Elle ne calcule rien : elle reçoit `ResultatAnalyse` et formate.
 
 ### 6.12 Les tests
 
@@ -791,16 +703,13 @@ Le HTML contient :
 9. panier et économie ;
 10. moyenne Black Friday et égalité naïve/indexée.
 
-Le chiffre à retenir est « 10 tests unitaires ».
-
-Pourquoi tester ? Pour prouver que les règles fonctionnent sans lancer tout le
-programme, et pour éviter les régressions quand on modifie le code.
+Les tests servent à vérifier les règles sans lancer tout le programme.
 
 ---
 
-## 7. Les résultats à présenter
+## 7. Les résultats
 
-### 7.1 Chiffres globaux
+### Chiffres globaux
 
 | Indicateur | Valeur |
 |---|---:|
@@ -814,7 +723,7 @@ Les 7 produits non comparés :
 - **P03** Samsung Galaxy A55 : aucune offre disponible (ruptures) ;
 - **P08, P13, P18, P19, P25, P30** : une seule boutique disponible.
 
-### 7.2 Victoires
+### Victoires
 
 | Boutique | Produits où elle est la moins chère |
 |---|---:|
@@ -822,10 +731,9 @@ Les 7 produits non comparés :
 | Baobab Shop | 9 |
 | Marché Lagune | 6 |
 
-Il y a **2 égalités** : souris Logitech M185 (P16) et fer Philips (P27),
-moins chers au même prix chez Marché et Comptoir.
+Il y a **2 égalités** : souris Logitech M185 (P16) et fer Philips (P27).
 
-### 7.3 Surcoût moyen par rapport au prix le plus bas
+### Surcoût moyen par rapport au prix le plus bas
 
 | Boutique | Surcoût moyen |
 |---|---:|
@@ -833,7 +741,7 @@ moins chers au même prix chez Marché et Comptoir.
 | Marché Lagune | 3,8 % |
 | Baobab Shop | 4,7 % |
 
-### 7.4 Top 3 des marges en FCFA
+### Top 3 des marges en FCFA
 
 | Produit | Meilleure boutique | Prix min | Prix max | Écart |
 |---|---|---:|---:|---:|
@@ -841,7 +749,7 @@ moins chers au même prix chez Marché et Comptoir.
 | P09 — iPhone 13 | Baobab Shop | 417 200 | 443 700 | **26 500 FCFA** |
 | P24 — Climatiseur LG 1 CV | Baobab Shop | 253 300 | 279 300 | **26 000 FCFA** |
 
-### 7.5 Top 3 des écarts relatifs (à surveiller)
+### Top 3 des écarts relatifs
 
 | Produit | Écart |
 |---|---:|
@@ -849,7 +757,7 @@ moins chers au même prix chez Marché et Comptoir.
 | P14 — Clé USB SanDisk 64 Go | **19,7 %** |
 | P21 — Congélateur Nasco 200 L | **16,0 %** |
 
-### 7.6 Panier
+### Panier
 
 | Boutique | Coût si tout est acheté sur place |
 |---|---:|
@@ -867,7 +775,7 @@ moins chers au même prix chez Marché et Comptoir.
 
 **Économie** : 6 500 FCFA par rapport à la meilleure boutique unique.
 
-### 7.7 Historique
+### Historique
 
 | Boutique | Moyenne annuelle | Black Friday | Variation |
 |---|---:|---:|---:|
@@ -879,27 +787,26 @@ Le Black Friday était intéressant chez Marché Lagune et Baobab Shop, mais pas
 chez Comptoir Ivoire. Le mois le moins cher est **septembre 2026** pour les
 trois enseignes.
 
-### 7.8 Benchmark
+### Benchmark
 
 Exemple de mesure (les temps varient à chaque exécution) :
 
 | Opération | Version naïve | Version indexée | Gain |
 |---|---:|---:|---:|
-| 500 recherches dans 20 876 lignes | ≈ 254 ms | ≈ 0,1 ms | ×2 300 |
-| 100 recherches dans 20 000 produits | ≈ 21 ms | ≈ 1,9 ms | ×11 |
+| 500 recherches dans 20 876 lignes | ≈ 230 ms | ≈ 0,09 ms | ×2 500 |
 
 ---
 
 ## 8. La complexité expliquée simplement
 
-### 8.1 Les lettres
+### Les lettres
 
 - `n` : nombre de lignes lues (offres ou relevés historiques) ;
 - `m` : nombre de produits du catalogue (30) ;
 - `q` : nombre de requêtes ;
 - `k` : nombre moyen de candidats après l'index (petit).
 
-### 8.2 Les complexités du projet
+### Les complexités du projet
 
 | Opération | Structure | Complexité |
 |---|---|---|
@@ -914,7 +821,7 @@ Exemple de mesure (les temps varient à chaque exécution) :
 | Chercher dans l'historique (index) | `dict` | `O(q)` |
 | Panier | `dict` + 5 articles | `O(n + 5 × 3)` |
 
-### 8.3 Pourquoi `dict` et `set` sont rapides
+### Pourquoi `dict` et `set` sont rapides
 
 Un dictionnaire ou un ensemble utilise une **table de hachage** : on calcule
 une clé (`hash`) et on va presque directement à la case mémoire. En moyenne,
@@ -926,18 +833,14 @@ C'est pour cela que :
 - les offres sont regroupées par `produit_id` ;
 - le rapprochement utilise un index `mot → produits`.
 
-### 8.4 Naïf vs indexé : l'image à retenir
+### Naïf vs indexé : l'image à retenir
 
 - **Naïf** : chercher une personne dans un annuaire en lisant toutes les pages.
 - **Indexé** : ouvrir directement la page grâce à l'index alphabétique.
 
-Le benchmark montre la différence en temps réel.
-
 ---
 
 ## 9. Lancer le projet
-
-### 9.1 Installation
 
 ```powershell
 cd "C:\Users\DELL\Documents\LICENCE 2\PROJET-L2\PYTHON\ANALYSE_DU_MARCHE"
@@ -947,47 +850,26 @@ cd "C:\Users\DELL\Documents\LICENCE 2\PROJET-L2\PYTHON\ANALYSE_DU_MARCHE"
 
 # Installer la dépendance
 pip install -r requirements.txt
+
+# Lancer l'analyse
+python main.py
+
+# Lancer les tests
+python -m unittest discover -s tests -v
 ```
 
 Si PowerShell refuse l'activation :
 
 ```powershell
-.\.venv\Scripts\python.exe -X utf8 main.py
+.\.venv\Scripts\python.exe main.py
 ```
 
-### 9.2 Commandes utiles
-
-```powershell
-# Analyse complète
-python main.py
-
-# Menu interactif
-python main.py --menu
-
-# Sans benchmark (plus rapide)
-python main.py --no-benchmark
-
-# Tests
-python -m unittest discover -s tests -v
-```
-
-### 9.3 Fichiers produits
+Fichiers produits :
 
 | Fichier | Contenu |
 |---|---|
 | `reports/comparatif.csv` | tableau produit par produit |
-| `reports/journal_nettoyage.csv` | toutes les anomalies et actions |
-| `reports/rapport.html` | rapport visuel autonome |
-
-### 9.4 Vérifications avant de rendre
-
-```powershell
-python -m unittest discover -s tests -v
-python main.py
-```
-
-Puis ouvrir `reports/rapport.html` dans un navigateur et vérifier que les
-tableaux s'affichent.
+| `reports/journal_nettoyage.csv` | anomalies et actions |
 
 ---
 
@@ -997,8 +879,7 @@ tableaux s'affichent.
 
 - Trois boutiques, mêmes produits, noms et prix différents.
 - Question : où acheter, et quel écart ?
-- Annoncer le pipeline : collecter → normaliser → rapprocher → comparer →
-  décider.
+- Pipeline : collecter → normaliser → rapprocher → comparer → décider.
 
 ### Slide 2 — Les données (1 min 30)
 
@@ -1059,14 +940,11 @@ tableaux s'affichent.
 
 ### Démonstration en direct
 
-Ordre conseillé :
-
 1. montrer l'arborescence ;
 2. lancer `python main.py` ;
 3. montrer le journal ;
 4. montrer le comparatif ;
-5. ouvrir `reports/rapport.html` ;
-6. lancer les tests.
+5. lancer les tests.
 
 ### Phrases utiles
 
@@ -1081,19 +959,19 @@ Ordre conseillé :
 
 ---
 
-## 11. Questions probables du professeur (et réponses)
+## 11. Questions probables du professeur
 
 ### 1. Pourquoi avoir choisi le MVC ?
 
 Pour séparer les responsabilités : le modèle contient les données et les
-règles, la vue affiche, le contrôleur orchestre. On peut changer l'affichage
-ou tester les calculs sans toucher au reste.
+règles, la vue affiche, le contrôleur orchestre. On peut tester les calculs
+sans toucher à l'affichage.
 
 ### 2. Pourquoi les services sont-ils dans le modèle ?
 
 Parce que ce sont des règles métier, pas de l'affichage. `Models/` contient les
 objets, `Services/` contient les traitements. Ensemble, ils forment la couche
-Modèle. C'est une séparation MVC enrichie, courante en Python.
+Modèle.
 
 ### 3. Pourquoi ne pas avoir utilisé pandas ?
 
@@ -1124,7 +1002,6 @@ journal.
 
 Parce que les articles sont indépendants : pas de frais fixes, pas de
 contrainte de boutique. Acheter chaque article au moins cher est donc optimal.
-Si on ajoutait des frais fixes, il faudrait un vrai problème d'optimisation.
 
 ### 8. Pourquoi seulement 23 produits comparés sur 30 ?
 
@@ -1180,29 +1057,21 @@ change pas : c'est l'intérêt du MVC et des services.
 Pour prouver que les anomalies ont été vues et traitées, et pour permettre au
 professeur de vérifier chaque décision. C'est une exigence explicite du sujet.
 
-### 17. Pourquoi un rapport HTML ?
+### 17. Pourquoi ne pas avoir fait d'interface graphique ?
 
-Pour avoir une preuve visuelle, autonome et facile à ouvrir. Le HTML ne dépend
-d'aucun serveur : c'est un simple fichier.
+Parce que l'énoncé demande un programme console, un comparatif CSV et un
+journal CSV. Ces sorties suffisent pour répondre aux huit consignes.
 
 ---
 
 ## 12. Mettre le projet sur GitHub
 
-Le dossier n'est pas encore un dépôt Git au moment de la rédaction. Depuis la
-racine du projet :
+Le dossier est déjà un dépôt Git local. Créer un dépôt **vide** sur GitHub
+(sans README, sans `.gitignore`), puis :
 
 ```powershell
-git init
-git add .
-git commit -m "Analyse comparative de marché - MVC"
-git branch -M main
-```
+cd "C:\Users\DELL\Documents\LICENCE 2\PROJET-L2\PYTHON\ANALYSE_DU_MARCHE"
 
-Créer ensuite un dépôt **vide** sur GitHub (sans README, sans `.gitignore`),
-puis :
-
-```powershell
 git remote add origin https://github.com/<votre-utilisateur>/<nom-du-depot>.git
 git push -u origin main
 ```
@@ -1214,15 +1083,7 @@ gh auth login
 gh repo create <nom-du-depot> --public --source=. --remote=origin --push
 ```
 
-### Ce qui ne doit pas être commité
-
-Le `.gitignore` exclut déjà :
-
-- `.venv/` ;
-- `venv/` ;
-- `__pycache__/` ;
-- `.idea/` ;
-- les fichiers temporaires.
+Le `.gitignore` exclut `.venv/`, `venv/`, `__pycache__/` et `.idea/`.
 
 Vérifier avant de pousser :
 
@@ -1230,25 +1091,12 @@ Vérifier avant de pousser :
 git status
 ```
 
-### Ce qui doit être commité
-
-- le code (`Models/`, `Services/`, `Views/`, `Controllers/`, `tests/`) ;
-- `main.py`, `README.md`, `EXPLICATION.md` ;
-- `data/` (les données fictives de l'exercice) ;
-- `docs/LISEZ-MOI.md` ;
-- `requirements.txt`, `.gitignore` ;
-- éventuellement `reports/` si le professeur veut voir les sorties.
-
-> Ne jamais publier de token, de mot de passe ou de clé API. Ici, il n'y en a
-> pas.
-
 ---
 
 ## 13. Checklist avant de rendre
 
 - [ ] `python -m unittest discover -s tests -v` : 10 tests OK.
 - [ ] `python main.py` : le programme se termine sans erreur.
-- [ ] `reports/rapport.html` s'ouvre dans le navigateur.
 - [ ] `reports/comparatif.csv` s'ouvre dans Excel.
 - [ ] `reports/journal_nettoyage.csv` contient les anomalies.
 - [ ] `README.md` explique l'installation et les résultats.
@@ -1266,7 +1114,7 @@ git status
 
 ---
 
-## 14. Résumé en une page (pour réviser juste avant)
+## 14. Résumé en une page
 
 ```text
 SUJET
@@ -1281,7 +1129,7 @@ Collecter → Normaliser → Rapprocher → Comparer → Décider → Exporter.
 
 MVC
 Models + Services = règles métier.
-Views = affichage.
+Views = affichage console.
 Controllers = orchestration.
 
 NETTOYAGE

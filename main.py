@@ -1,14 +1,11 @@
 """Point d'entrée du projet.
 
-Exemples :
-    python main.py              # analyse complète + rapports
-    python main.py --menu       # menu interactif
-    python main.py --no-benchmark
+Lancement :
+    python main.py
 """
 
 from __future__ import annotations
 
-import argparse
 import sys
 
 from Controllers.Analyse_Controller import AnalyseController
@@ -26,26 +23,10 @@ def configurer_console() -> None:
 def main() -> int:
     configurer_console()
 
-    parseur = argparse.ArgumentParser(
-        description="Analyse comparative de marché — trois boutiques, un catalogue."
-    )
-    parseur.add_argument(
-        "--menu", action="store_true",
-        help="afficher le menu interactif après l'analyse",
-    )
-    parseur.add_argument(
-        "--no-benchmark", action="store_true",
-        help="ne pas mesurer les temps de recherche",
-    )
-    arguments = parseur.parse_args()
-
     controleur = AnalyseController()
     try:
-        if arguments.menu:
-            controleur.menu()
-        else:
-            resultat = controleur.executer(avec_benchmark=not arguments.no_benchmark)
-            controleur.vue.afficher_resultat(resultat)
+        resultat = controleur.executer()
+        controleur.vue.afficher_resultat(resultat)
     except FileNotFoundError as erreur:
         print(f"Erreur : {erreur}", file=sys.stderr)
         return 1

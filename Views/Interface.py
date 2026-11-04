@@ -279,46 +279,29 @@ class Interface:
                       f"le meilleur mois était {stats.meilleur_mois}.")
 
     def afficher_benchmark(self, resultat: ResultatAnalyse) -> None:
-        if resultat.benchmark is None:
+        if resultat.benchmark is None or not resultat.benchmark.historique:
             return
         self.sous_titre("7. COMPLEXITÉ : TEMPS MESURÉS")
-        for titre, mesures in [
-            ("Recherche dans l'historique", resultat.benchmark.historique),
-            ("Recherche dans un catalogue", resultat.benchmark.correspondance),
-        ]:
-            if not mesures:
-                continue
-            print()
-            print(titre + " :")
-            lignes = []
-            for mesure in mesures:
-                acceleration = (
-                    mesure.temps_naif / mesure.temps_index
-                    if mesure.temps_index > 0 else 0
-                )
-                lignes.append([
-                    mesure.libelle,
-                    mesure.complexite_naive,
-                    duree(mesure.temps_naif),
-                    mesure.complexite_index,
-                    duree(mesure.temps_index),
-                    f"×{acceleration:.0f}",
-                ])
-            self.tableau(
-                ["Opération", "Complexité naïve", "Temps naïf",
-                 "Complexité index", "Temps index", "Gain"],
-                lignes,
+        lignes = []
+        for mesure in resultat.benchmark.historique:
+            acceleration = (
+                mesure.temps_naif / mesure.temps_index
+                if mesure.temps_index > 0 else 0
             )
+            lignes.append([
+                mesure.libelle,
+                mesure.complexite_naive,
+                duree(mesure.temps_naif),
+                mesure.complexite_index,
+                duree(mesure.temps_index),
+                f"×{acceleration:.0f}",
+            ])
+        self.tableau(
+            ["Opération", "Complexité naïve", "Temps naïf",
+             "Complexité index", "Temps index", "Gain"],
+            lignes,
+        )
         print("Le benchmark est refait à chaque exécution sur cette machine.")
-
-    def afficher_temps(self, resultat: ResultatAnalyse) -> None:
-        numero = "8" if resultat.benchmark is not None else "7"
-        self.sous_titre(f"{numero}. TEMPS D'EXÉCUTION PAR ÉTAPE")
-        lignes = [
-            [etape, duree(temps)]
-            for etape, temps in resultat.temps.items()
-        ]
-        self.tableau(["Étape", "Temps"], lignes)
 
     def afficher_resultat(self, resultat: ResultatAnalyse) -> None:
         self.afficher_entete(resultat)
@@ -329,28 +312,7 @@ class Interface:
         self.afficher_panier(resultat.panier)
         self.afficher_historique(resultat.historique)
         self.afficher_benchmark(resultat)
-        self.afficher_temps(resultat)
         print()
-        print("Rapports générés :")
+        print("Fichiers générés :")
         print("  reports/comparatif.csv")
         print("  reports/journal_nettoyage.csv")
-        print("  reports/rapport.html")
-
-    # ------------------------------------------------------------------
-    # Menu interactif
-    # ------------------------------------------------------------------
-    def menu_principal(self) -> str:
-        print()
-        print("=" * LARGEUR)
-        print("MENU".center(LARGEUR))
-        print("=" * LARGEUR)
-        print("1. Afficher tout le rapport")
-        print("2. Comparatif des prix")
-        print("3. Synthèse et décision")
-        print("4. Panier de rentrée")
-        print("5. Historique des prix")
-        print("6. Journal de nettoyage complet")
-        print("7. Benchmark de complexité")
-        print("8. Régénérer le rapport HTML")
-        print("9. Quitter")
-        return input("Votre choix : ").strip()
