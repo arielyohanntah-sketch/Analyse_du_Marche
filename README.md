@@ -1,9 +1,5 @@
 # Analyse Comparative de Marché (Comparateur de Prix Multi-Boutiques)
 
-[![Python Version](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
-[![Architecture](https://img.shields.io/badge/Architecture-MVC-green.svg)](#architecture-mvc)
-[![Licence](https://img.shields.io/badge/Niveau-Licence%202%20Informatique-orange.svg)](#)
-
 Projet universitaire d'analyse comparative de marché et de décision d'achat développé dans le cadre du cours de **Python (L2 Computer Science - Séance 3)**.
 
 Le programme collecte, nettoie et compare les catalogues de prix de trois enseignes ivoiriennes fictives d'électronique et d'électroménager :
@@ -32,29 +28,29 @@ Le projet respecte rigoureusement le modèle architectural **Modèle - Vue - Con
 ```text
 ANALYSE_DU_MARCHE/
 │
-├── models/                             # COUCHE MODÈLE (Logique & Données)
-│   ├── journal_erreurs.py              # Journalise les anomalies (doublons, ruptures, prix invalides)
-│   ├── nettoyage_donnees.py            # Normalise les noms/prix et rapproche vers P01-P30
-│   ├── chargement_fichiers.py          # Lecture streaming des fichiers CSV, JSON, Excel
-│   └── analyse_comparaison.py          # Comparatif, panier optimal, Black Friday, export CSV
+├── models/                             
+│   ├── journal_erreurs.py             
+│   ├── nettoyage_donnees.py           
+│   ├── chargement_fichiers.py        
+│   └── analyse_comparaison.py         
 │
-├── views/                              # COUCHE VUE (Interface Utilisateur)
-│   └── affichage_console.py            # Formate et affiche les tableaux dans le terminal
+├── views/                             
+│   └── affichage_console.py           
 │
-├── controllers/                        # COUCHE CONTRÔLEUR (Orchestration)
-│   └── controleur_principal.py         # Relie le Modèle à la Vue et pilote le flux
+├── controllers/                        
+│   └── controleur_principal.py        
 │
-├── data/                               # Sources de données & exports
-│   ├── catalogue_reference.csv         # 30 produits officiels (P01 à P30)
-│   ├── marche_lagune.csv               # Données Marché Lagune (CSV)
-│   ├── baobab_shop.json                # Données Baobab Shop (JSON)
-│   ├── comptoir_ivoire.xlsx            # Données Comptoir Ivoire (Excel)
-│   ├── historique_prix.csv             # 20 876 relevés de prix journaliers
-│   ├── comparatif.csv                  # [GÉNÉRÉ] Tableau comparatif complet
-│   └── journal_anomalies.txt           # [GÉNÉRÉ] Journal des 17 anomalies détectées
+├── data/                              
+│   ├── catalogue_reference.csv         
+│   ├── marche_lagune.csv              
+│   ├── baobab_shop.json               
+│   ├── comptoir_ivoire.xlsx           
+│   ├── historique_prix.csv            
+│   ├── comparatif.csv                 
+│   └── journal_anomalies.txt          
 │
-├── main.py                             # Point d'entrée principal
-└── README.md                           # Documentation du dépôt GitHub
+├── main.py                            
+└── README.md                          
 ```
 
 ---
