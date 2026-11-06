@@ -1,4 +1,4 @@
-# 📊 Analyse Comparative de Marché (Comparateur de Prix Multi-Boutiques)
+# Analyse Comparative de Marché (Comparateur de Prix Multi-Boutiques)
 
 [![Python Version](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![Architecture](https://img.shields.io/badge/Architecture-MVC-green.svg)](#architecture-mvc)
@@ -13,7 +13,7 @@ Le programme collecte, nettoie et compare les catalogues de prix de trois enseig
 
 ---
 
-## 🎯 Objectifs du Projet
+## Objectifs du Projet
 
 1. **Collecter et harmoniser** des sources de formats hétérogènes (CSV, JSON, Excel) vers un catalogue de référence de 30 produits (`P01` à `P30`).
 2. **Gérer les anomalies réelles** : suppression des doublons, détection des prix aberrants, filtrage des ruptures de stock et journalisation dans `journal_anomalies.txt`.
@@ -25,7 +25,7 @@ Le programme collecte, nettoie et compare les catalogues de prix de trois enseig
 
 ---
 
-## 🏗️ Architecture MVC
+## Architecture MVC
 
 Le projet respecte rigoureusement le modèle architectural **Modèle - Vue - Contrôleur (MVC)** avec des noms de fichiers clairs et explicites en français :
 
@@ -59,7 +59,7 @@ ANALYSE_DU_MARCHE/
 
 ---
 
-## ⚡ Prérequis & Installation
+# Prérequis & Installation
 
 ### 1. Cloner le projet
 ```bash
@@ -77,7 +77,7 @@ pip install openpyxl
 
 ---
 
-## 🚀 Exécution
+## Exécution
 
 Pour lancer le comparateur, exécutez simplement :
 
@@ -87,7 +87,7 @@ python main.py
 
 ---
 
-## 📈 Résultats Principaux de l'Analyse
+## Résultats Principaux de l'Analyse
 
 ### 1. Synthèse globale des enseignes
 * **Baobab Shop** est la moins chère sur **9 produits sur 23** (39,1 % des cas).
@@ -116,7 +116,7 @@ Composition du panier :
 
 ---
 
-## 🧠 Étude de Complexité Algorithmique (Big-O)
+## Étude de Complexité Algorithmique (Big-O)
 
 * **Complexité Temporelle $\mathcal{O}(N)$ :**  
   L'utilisation de **tables de hachage (dictionnaires Python)** permet d'insérer et d'indexer chaque produit en temps moyen constant $\mathcal{O}(1)$. Les 20 876 lignes de l'historique sont traitées en **~40 millisecondes**, évitant tout parcours imbriqué quadratique lent en $\mathcal{O}(N^2)$.
