@@ -1,0 +1,72 @@
+================================================================================
+          JOURNAL DES ANOMALIES TROUVÉES DANS LES DONNÉES
+================================================================================
+
+[Marché Lagune] Réf: ML-1000 | Problème: Rupture
+   Détail : Statut 'Rupture' pour 'SAMSUNG GALAXY A15 (128GB)'.
+   Action : Non retenu pour le moins cher.
+
+[Marché Lagune] Réf: ML-1014 | Problème: Rupture
+   Détail : Statut 'Rupture' pour 'SAMSUNG GALAXY A55 (256GB)'.
+   Action : Non retenu pour le moins cher.
+
+[Marché Lagune] Réf: ML-1021 | Problème: Prix aberrant
+   Détail : Prix de 779,000 F anormalement élevé.
+   Action : Signalé.
+
+[Marché Lagune] Réf: ML-1049 | Problème: Rupture
+   Détail : Statut 'Rupture' pour 'ITEL A70 64GB'.
+   Action : Non retenu pour le moins cher.
+
+[Marché Lagune] Réf: ML-1000 | Problème: Doublon
+   Détail : Article SAMSUNG GALAXY A15 (128GB) en double.
+   Action : Ligne doublon ignorée.
+
+[Marché Lagune] Réf: ML-1084 | Problème: Rupture
+   Détail : Statut 'Rupture' pour 'PC PORTABLE DELL INSPIRON 15 I5 16GB/512GB'.
+   Action : Non retenu pour le moins cher.
+
+[Marché Lagune] Réf: ML-1119 | Problème: Prix invalide
+   Détail : Valeur : 'Prix sur demande'.
+   Action : Prix ignoré.
+
+[Marché Lagune] Réf: ML-1147 | Problème: Rupture
+   Détail : Statut 'Rupture' pour 'TV HISENSE 32"'.
+   Action : Non retenu pour le moins cher.
+
+[Marché Lagune] Réf: ML-1168 | Problème: Prix invalide
+   Détail : Valeur : ''.
+   Action : Prix ignoré.
+
+[Marché Lagune] Réf: ML-1168 | Problème: Rupture
+   Détail : Statut 'Rupture' pour 'MIXEUR MOULINEX 1.5L'.
+   Action : Non retenu pour le moins cher.
+
+[Marché Lagune] Réf: ML-1147 | Problème: Doublon
+   Détail : Article TV HISENSE 32" en double.
+   Action : Ligne doublon ignorée.
+
+[Baobab Shop] Réf: BB03433 | Problème: Rupture
+   Détail : Stock à 0 pour 'Galaxy A55 256GB - Samsung'.
+   Action : Non retenu pour le moins cher.
+
+[Baobab Shop] Réf: BB16464 | Problème: Rupture
+   Détail : Stock à 0 pour 'Logitech M185 Wireless Mouse'.
+   Action : Non retenu pour le moins cher.
+
+[Baobab Shop] Réf: BB27999 | Problème: Prix manquant
+   Détail : Montant vide pour 'Philips Steam Iron'.
+   Action : Prix non exploitable.
+
+[Baobab Shop] Réf: BB30124 | Problème: Rupture
+   Détail : Stock à 0 pour 'Hisense Air Conditioner 1.5HP'.
+   Action : Non retenu pour le moins cher.
+
+[Comptoir Ivoire] Réf: CI214 | Problème: Rupture
+   Détail : Quantité à 0 pour 'TV Samsung 43"'.
+   Action : Non retenu pour le moins cher.
+
+[Comptoir Ivoire] Réf: CI217 | Problème: Rupture
+   Détail : Quantité à 0 pour 'Ventilo Binatone 16"'.
+   Action : Non retenu pour le moins cher.
+
