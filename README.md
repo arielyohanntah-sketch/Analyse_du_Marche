@@ -1,6 +1,5 @@
 # Analyse Comparative de Marché (Comparateur de Prix Multi-Boutiques)
 
-Projet universitaire d'analyse comparative de marché et de décision d'achat développé dans le cadre du cours de **Python (L2 Computer Science - Séance 3)**.
 
 Le programme collecte, nettoie et compare les catalogues de prix de trois enseignes ivoiriennes fictives d'électronique et d'électroménager :
 * **Marché Lagune** (Site e-commerce, export CSV avec séparateur `;`)
